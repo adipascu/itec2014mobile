@@ -1,6 +1,7 @@
 package ro.epb.itec.tripmemories.persistance;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
@@ -10,6 +11,8 @@ import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
@@ -18,7 +21,7 @@ import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 
 public class TripProvider extends ContentProvider {
-	
+
 	private DatabaseHelper helper;
 	private SQLiteDatabase db;
 	private static final UriMatcher matcher = TripMatcher.Instance();
@@ -41,7 +44,7 @@ public class TripProvider extends ContentProvider {
 			return ImageContract.CONTENT_DIR_TYPE;
 		case TripMatcher.IMAGE_ITEM:
 			return ImageContract.CONTENT_ITEM_TYPE;
-			
+
 		default:
 			throw new IllegalArgumentException("unknown uri " + uri);
 		}
@@ -130,8 +133,8 @@ public class TripProvider extends ContentProvider {
 
 	@Override
 	public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
-		//		openFileHelper(uri, mode)
-		return super.openFile(uri, mode);
+		return openFileHelper(uri, "r");
 	}
+
 
 }
