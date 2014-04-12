@@ -2,6 +2,7 @@ package ro.epb.itec.tripmemories.persistance.contracts;
 
 import android.net.Uri;
 import ro.epb.itec.tripmemories.persistance.SyncColumns;
+import ro.epb.itec.tripmemories.persistance.TripMatcher;
 import ro.epb.itec.tripmemories.persistance.TripProvider;
 
 
@@ -16,6 +17,6 @@ public class StoryContract implements SyncColumns{
 
 	public static final String CONTENT_DIR_TYPE = "vnd.android.cursor.dir/ro.epb.itec.tripmemories.story";
 	public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/ro.epb.itec.tripmemories.story";
-	public static final Uri STORY_DIR_URI = TripProvider.CONTENT_AUTHORITY_URI.buildUpon().appendPath("story").build();
+	public static final Uri CONTENT_DIR_URI = TripMatcher.CONTENT_AUTHORITY_URI.buildUpon().appendPath("story").build();
 
 }
