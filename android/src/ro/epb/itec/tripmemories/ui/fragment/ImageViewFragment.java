@@ -2,19 +2,25 @@ package ro.epb.itec.tripmemories.ui.fragment;
 
 import java.io.File;
 
-import com.squareup.picasso.Picasso;
-
+import ro.epb.itec.tripmemories.R;
 import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
+import ro.epb.itec.tripmemories.ui.LargeImageLoader;
 import ro.epb.itec.tripmemories.ui.view.TouchImageView;
 import ro.epb.itec.tripmemories.ui.view.TouchImageView.StateChangeListener;
 import android.app.Activity;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Picasso.LoadedFrom;
+import com.squareup.picasso.Target;
 
 public class ImageViewFragment extends Fragment{
 
@@ -23,9 +29,10 @@ public class ImageViewFragment extends Fragment{
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		TouchImageView view = new TouchImageView(getActivity());
-		String imagePath = getArguments().getString(ARG_IMAGE_PATH);
-		Picasso.with(getActivity()).load(new File(imagePath)).resize(1000, 1000).into(view);
+		final TouchImageView view = (TouchImageView) inflater.inflate(R.layout.story_slideshow_fragment, container, false);
+		final String imagePath = getArguments().getString(ARG_IMAGE_PATH);
+		LargeImageLoader.load(getActivity(),new File(imagePath), view);		
+		
 		Activity activity = getActivity();
 		
 		if(activity instanceof TouchImageView.StateChangeListener){
