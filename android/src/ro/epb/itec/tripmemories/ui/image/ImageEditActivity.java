@@ -143,6 +143,7 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 			Intent shareIntent = new Intent(Intent.ACTION_SEND);
 			shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
 			shareIntent.setType("image/*");
+			shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 			
 			startActivity(Intent.createChooser(shareIntent, "Share Image"));
 			return true;

@@ -23,7 +23,8 @@
            
             android:name="ro.epb.itec.tripmemories.persistance.TripProvider"
             android:authorities="ro.epb.itec.tripmemories.provider"
-            android:exported="true" >
+            android:exported="false"
+            android:grantUriPermissions="true" >
         </provider>
 
         <activity
