@@ -139,6 +139,13 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 			Intent intent = new Intent(Intent.ACTION_PICK, StoryContract.CONTENT_DIR_URI);
 			startActivityForResult(intent, PICK_MOVE_CODE);
 			return true;
+		case R.id.share:
+			Intent shareIntent = new Intent(Intent.ACTION_SEND);
+			shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+			shareIntent.setType("image/*");
+			
+			startActivity(Intent.createChooser(shareIntent, "Share Image"));
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);

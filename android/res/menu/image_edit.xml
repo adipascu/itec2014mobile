@@ -10,5 +10,10 @@
         android:id="@+id/move"
         android:showAsAction="always"
         android:title="Move to story"/>
+    
+    <item
+        android:id="@+id/share"
+        android:showAsAction="always"
+        android:title="Share"/>
 
 </menu>

@@ -67,6 +67,7 @@ public class TripProvider extends ContentProvider {
 			result = StoryHelper.buildUri(UUID);
 			break;
 		case TripMatcher.STORY_IMAGE_DIR:
+			values.put(ImageContract.COLUMN_DISPLAY_NAME, UUID +".jpg");
 			values.put(ImageContract.COLUMN_ID_STORY, segments.get(1));
 			db.replaceOrThrow(ImageContract.TABLE_NAME, null, values);
 			result = ImageHelper.buildUri(UUID);
