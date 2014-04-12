@@ -7,9 +7,14 @@ import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
 import ro.epb.itec.tripmemories.ui.view.ToggleViewPager;
 import ro.epb.itec.tripmemories.ui.view.TouchImageView;
 import ro.epb.itec.tripmemories.ui.view.TouchImageView.StateChangeListener;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
@@ -31,7 +36,7 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 	private static final int LOADER_IMAGES = 1;
 	private static final int LOADER_IMAGE_PARENT = 3;
 	private Uri uri;
-	
+
 	private ImagePickerAdapter viewAdapter;
 	private ImageSlideAdapter fragmentAdapter;
 	private Intent intent;
@@ -39,10 +44,11 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 	private LoaderManager loaderManager;
 	private ToggleViewPager viewPager;
 
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 
 		intent = getIntent();
 		uri = intent.getData();
@@ -65,13 +71,28 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 				viewPager = (ToggleViewPager) findViewById(R.id.view_pager);
 				//todo: change offscreen limit SD vs HD
 				viewPager.setOffscreenPageLimit(4);
-				
+
 				viewPager.setAdapter(fragmentAdapter);
 				loaderManager.initLoader(LOADER_IMAGE_PARENT, null, this);
 			}			
 		}
+		if(VERSION.SDK_INT >= VERSION_CODES.KITKAT)
+			setImmersive(true);
 
-		
+		//setFullscreen(true);
+
+	}
+
+
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private void setFullscreen(boolean b) {
+		final View rootView = findViewById(R.id.container);
+		//rootView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+		getActionBar().hide();		
+		if(VERSION.SDK_INT >= 16)
+			rootView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+
 	}
 
 
@@ -175,8 +196,8 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 			break;
 		case LOADER_IMAGE_PARENT:
 			//TODO: finish on deletion
-//			if(fragmentAdapter!=null)
-//				fragmentAdapter.swapCursor(null);
+			//			if(fragmentAdapter!=null)
+			//				fragmentAdapter.swapCursor(null);
 			break;
 
 		default:
@@ -198,8 +219,8 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 	public void stateChanged(TouchImageView scaleListener, boolean isZoomed) {
 		if(viewPager!=null)
 			viewPager.setPagingEnabled(!isZoomed);
-		
-		
+
+
 	}
 
 
