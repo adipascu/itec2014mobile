@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.media.ExifInterface;
@@ -45,5 +46,6 @@ public class ImageHelper {
 		return new File(cursor.getString(cursor.getColumnIndex(ImageContract.COLUMN_SRC)));
 		
 	}
+
 
 }

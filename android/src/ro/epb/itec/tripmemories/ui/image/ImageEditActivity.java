@@ -1,10 +1,22 @@
 package ro.epb.itec.tripmemories.ui.image;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+
 import ro.epb.itec.tripmemories.R;
+import ro.epb.itec.tripmemories.persistance.TripMatcher;
+import ro.epb.itec.tripmemories.persistance.helpers.ImageHelper;
+import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
+import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -12,6 +24,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class ImageEditActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
 
@@ -19,20 +32,60 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 
 	private static final int LOADER_IMAGE = 0;
 
+	private static final int TAKE_PHOTO_CODE = 0;
+
 
 	private Intent intent;
-	private Uri uri;
+	private Uri uri;		
+
+	private UriMatcher matcher;
+	private File imageFile;
+	private boolean isTakingSnapshot;
 	private LoaderManager loaderManager;
+
+
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		matcher = TripMatcher.Instance();
 		intent = getIntent();
 		uri = intent.getData();
 
-		loaderManager = getSupportLoaderManager();
-		loaderManager.initLoader(LOADER_IMAGE, null, this);
+		if(Intent.ACTION_INSERT.equals(intent.getAction()))
+		{
+			if(isTakingSnapshot)
+				return;
+			isTakingSnapshot = true;
+			File dir = getExternalFilesDir(Environment.DIRECTORY_DCIM);
+			imageFile = new File(dir, UUID.randomUUID() + ".jpeg");
+			Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
+			startActivityForResult(captureIntent, TAKE_PHOTO_CODE);
+		}
+		else if(Intent.ACTION_EDIT.equals(intent.getAction())){
+			loaderManager = getSupportLoaderManager();
+			loaderManager.initLoader(LOADER_IMAGE, null, this);
+		}
+
+
+		//		//		show(new StylesheetQuestionFragment());
+		//		//		return;
+		//		if(intent.getAction().equals(Intent.ACTION_INSERT))
+		//		{
+		//			takeSnapshot();
+		//		}
+		//		else if(intent.getAction().equals(Intent.ACTION_EDIT))
+		//		{
+		//			
+		//			
+		//		//	Picasso.with(this).load(imageFile).fit().into(imageView);
+		//			getSupportLoaderManager().initLoader(LOADER_IMAGE, null, this);
+		//		}
+
+
+
 		//		if(Intent.ACTION_VIEW.equals(intent.getAction())){
 		//
 		//			type = getContentResolver().getType(uri);
@@ -60,11 +113,40 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 		//
 		//		//setFullscreen(true);
 
+
 	}
 
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode == TAKE_PHOTO_CODE)
+			isTakingSnapshot = false;
+		else return;
 
+		int match = matcher.match(uri);
+		if(match == TripMatcher.IMAGE_DIR){
+			if(resultCode == Activity.RESULT_CANCELED){
+				finish();
+			}
+			else{
 
+				try {
+
+					Uri currentStory = StoryHelper.getOrCreateCurrent(getContentResolver());
+					ContentValues values;
+					values = ImageHelper.newValues(imageFile.getAbsolutePath());
+					Uri images = StoryHelper.getImages(currentStory);
+					uri = getContentResolver().insert(images, values);
+					intent.setData(uri);
+					intent.setAction(Intent.ACTION_EDIT);
+					recreate();
+				} catch (IOException e) {
+					Toast.makeText(this, "image save error", Toast.LENGTH_SHORT).show();
+				}
+			}
+		}
+	}
 
 
 	@Override
@@ -79,7 +161,7 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.delete:
-
+			getContentResolver().delete(uri, null, null);
 			return true;
 
 		default:

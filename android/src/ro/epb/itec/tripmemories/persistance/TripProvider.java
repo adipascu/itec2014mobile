@@ -8,6 +8,7 @@ import ro.epb.itec.tripmemories.persistance.contracts.StoryContract;
 import ro.epb.itec.tripmemories.persistance.helpers.ImageHelper;
 import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -21,13 +22,8 @@ public class TripProvider extends ContentProvider {
 
 	private DatabaseHelper helper;
 	private SQLiteDatabase db;
+	private ContentResolver resolver;
 	private static final UriMatcher matcher = TripMatcher.Instance();
-
-	@Override
-	public int delete(Uri arg0, String arg1, String[] arg2) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	@Override
 	public String getType(Uri uri) {
@@ -78,7 +74,7 @@ public class TripProvider extends ContentProvider {
 		default:
 			throw new IllegalArgumentException("Unknown uri "+ uri);
 		}
-		getContext().getContentResolver().notifyChange(uri, null);
+		resolver.notifyChange(uri, null);
 
 		return result;
 	}
@@ -87,6 +83,7 @@ public class TripProvider extends ContentProvider {
 	public boolean onCreate() {
 		helper = new DatabaseHelper(getContext());
 		db = helper.getWritableDatabase();
+		resolver = getContext().getContentResolver();
 		return db!= null;
 	}
 
@@ -118,7 +115,7 @@ public class TripProvider extends ContentProvider {
 			throw new IllegalArgumentException("Unknown uri "+ uri);
 		}
 		Cursor ret = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
-		ret.setNotificationUri(getContext().getContentResolver(), uri);
+		ret.setNotificationUri(resolver, uri);
 		return ret;
 	}
 
@@ -126,6 +123,35 @@ public class TripProvider extends ContentProvider {
 	public int update(Uri arg0, ContentValues arg1, String arg2, String[] arg3) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public int delete(Uri uri, String selection, String[] selectionArgs) {
+		int ret = 0;
+		List<String> segments = uri.getPathSegments();
+		switch (matcher.match(uri)) {
+		case TripMatcher.IMAGE_ITEM:
+			
+			String[] projection = new String[]{ImageContract.COLUMN_ID_STORY};
+			String[] whereArgs = new String[]{segments.get(1)};
+			//get parent id
+			Cursor c = query(uri, projection , ImageContract._UUID+"=?", whereArgs, null);
+			if(!c.moveToFirst()){
+				throw new RuntimeException("missing parent!");
+			}
+			String storyUuid = c.getString(0);
+			Uri parentUri = StoryHelper.buildUri(storyUuid);
+			ret+=db.delete(ImageContract.TABLE_NAME, ImageContract._UUID+"=?", whereArgs );
+			resolver.notifyChange(parentUri, null);
+			
+			
+			break;
+
+		default:
+			throw new IllegalArgumentException("Unknown uri "+ uri);
+		}
+		resolver.notifyChange(uri, null);
+		return ret;
 	}
 
 	@Override

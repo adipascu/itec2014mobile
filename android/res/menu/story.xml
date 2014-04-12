@@ -5,10 +5,10 @@
     <item
         android:id="@+id/edit"
         android:showAsAction="always"
-        android:title="Edit story"/>
+        android:title="Edit story"/> -->
     <item
         android:id="@+id/add_image"
         android:showAsAction="always"
-        android:title="add an image"/> -->
+        android:title="add an image"/> 
 
 </menu>

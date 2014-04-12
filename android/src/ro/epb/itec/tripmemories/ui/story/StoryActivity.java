@@ -30,50 +30,43 @@ import android.widget.GridView;
 
 public class StoryActivity extends FragmentActivity implements LoaderCallbacks<Cursor>, OnItemClickListener, StateChangeListener {
 
-
-
 	private static final int LOADER_STORY = 0;
 	private static final int LOADER_IMAGES = 1;
 	private static final int LOADER_IMAGE_PARENT = 3;
-	private Uri uri;
+	
 
 	private ImagePickerAdapter viewAdapter;
 	private ImageSlideAdapter fragmentAdapter;
-	private Intent intent;
-	private String type;
-	private LoaderManager loaderManager;
+	
 	private ToggleViewPager viewPager;
+	private LoaderManager loaderManager;
+	
+	private Intent intent;
+	private String action;
+	private Uri uri;
+	private String type;
+	
+
+
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		loaderManager = getSupportLoaderManager();
 
 		intent = getIntent();
+		
+		action = intent.getAction();	
 		uri = intent.getData();
-
-		loaderManager = getSupportLoaderManager();
-		if(Intent.ACTION_VIEW.equals(intent.getAction())){
-
-			type = getContentResolver().getType(uri);
+		type = getContentResolver().getType(uri);
+		if(Intent.ACTION_VIEW.equals(action)){			
 			if(StoryContract.CONTENT_ITEM_TYPE.equals(type)){
-				setContentView(R.layout.story_grid_activity);
-				viewAdapter = new ImagePickerAdapter(this);
-				GridView gridView = (GridView) findViewById(R.id.grid_view);				
-				gridView.setAdapter(viewAdapter);
-				gridView.setOnItemClickListener(this);
-				loadStory();
+				createStoryList();
 			}
 			else if(ImageContract.CONTENT_ITEM_TYPE.equals(type)){
-				setContentView(R.layout.story_slideshow_activity);
-				fragmentAdapter = new ImageSlideAdapter(getSupportFragmentManager());
-				viewPager = (ToggleViewPager) findViewById(R.id.view_pager);
-				//todo: change offscreen limit SD vs HD
-				viewPager.setOffscreenPageLimit(4);
-
-				viewPager.setAdapter(fragmentAdapter);
-				loaderManager.initLoader(LOADER_IMAGE_PARENT, null, this);
+				createImageGrid();
 			}			
 		}
 		if(VERSION.SDK_INT >= VERSION_CODES.KITKAT)
@@ -81,6 +74,30 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 
 		//setFullscreen(true);
 
+	}
+
+
+
+	private void createImageGrid() {
+		setContentView(R.layout.story_slideshow_activity);
+		fragmentAdapter = new ImageSlideAdapter(getSupportFragmentManager());
+		viewPager = (ToggleViewPager) findViewById(R.id.view_pager);
+		//todo: change offscreen limit SD vs HD
+		viewPager.setOffscreenPageLimit(4);
+
+		viewPager.setAdapter(fragmentAdapter);
+		loaderManager.initLoader(LOADER_IMAGE_PARENT, null, this);
+	}
+
+
+
+	private void createStoryList() {
+		setContentView(R.layout.story_grid_activity);
+		viewAdapter = new ImagePickerAdapter(this);
+		GridView gridView = (GridView) findViewById(R.id.grid_view);				
+		gridView.setAdapter(viewAdapter);
+		gridView.setOnItemClickListener(this);
+		loadStory();
 	}
 
 
@@ -109,11 +126,12 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.add_image:
-
+			Intent intent = new Intent(Intent.ACTION_INSERT, ImageContract.CONTENT_DIR_URI);
+			startActivity(intent);
 			return true;
-//		case R.id.edit:
-//
-//			return true;
+			//		case R.id.edit:
+			//
+			//			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
@@ -162,10 +180,13 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 			}			
 			break;
 		case LOADER_IMAGE_PARENT:
-			cursor.moveToFirst();
-			String uuid = cursor.getString(cursor.getColumnIndex(ImageContract.COLUMN_ID_STORY));
-			uri = StoryHelper.buildUri(uuid);
-			loadStory();
+			if(cursor.moveToFirst()){
+				String uuid = cursor.getString(cursor.getColumnIndex(ImageContract.COLUMN_ID_STORY));
+				uri = StoryHelper.buildUri(uuid);
+				loadStory();
+			}
+			else
+				finish();
 			break;
 
 		default:
