@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-	static final int DATABASE_VERSION = 8;
+	static final int DATABASE_VERSION = 9;
 
 	static final String DATABSE_NAME = "main.db";
 	public DatabaseHelper(Context context) {
@@ -31,6 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 						ImageContract._ID + " INTEGER PRIMARY KEY, " + 
 						ImageContract._UUID + " TEXT UNIQUE NOT NULL, " + 
 						ImageContract.COLUMN_ID_STORY + " TEXT NOT NULL, " + 
+						ImageContract.COLUMN_ORIENTATION + " INTEGER KEY, " + 
 						ImageContract.COLUMN_SRC + " TEXT NOT NULL);";
 	
 		db.execSQL(CREATE_QUERY);

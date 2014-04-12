@@ -1,9 +1,11 @@
 package ro.epb.itec.tripmemories;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 import ro.epb.itec.tripmemories.persistance.TripMatcher;
+import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
 import ro.epb.itec.tripmemories.persistance.helpers.ImageHelper;
 import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
 import android.app.Activity;
@@ -20,6 +22,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -43,10 +46,10 @@ public class ImageActivity extends FragmentActivity implements LoaderCallbacks<C
 		setContentView(R.layout.activity_image);
 		matcher = TripMatcher.Instance();
 		imageView = (ImageView) findViewById(R.id.image_view);
-
+		
 		processIntent();
 
-		
+
 	}
 
 	private void processIntent() {
@@ -60,9 +63,10 @@ public class ImageActivity extends FragmentActivity implements LoaderCallbacks<C
 		}
 		else if(intent.getAction().equals(Intent.ACTION_EDIT))
 		{
-			Picasso.with(this).load(uri).resize(500, 500).into(imageView);
+			
+			
+		//	Picasso.with(this).load(imageFile).fit().into(imageView);
 			getSupportLoaderManager().initLoader(LOADR_IMAGE, null, this);
-
 		}		
 	}
 
@@ -89,13 +93,20 @@ public class ImageActivity extends FragmentActivity implements LoaderCallbacks<C
 				finish();
 			}
 			else{
-				Uri currentStory = StoryHelper.getOrCreateCurrent(getContentResolver());
-				ContentValues values = ImageHelper.newValues(imageFile.getAbsolutePath());
-				Uri images = currentStory.buildUpon().appendPath("image").build();
-				uri = getContentResolver().insert(images, values);
-				intent.setData(uri);
-				intent.setAction(Intent.ACTION_EDIT);
-				recreate();
+
+				try {
+					Uri currentStory = StoryHelper.getOrCreateCurrent(getContentResolver());
+					ContentValues values;
+					values = ImageHelper.newValues(imageFile.getAbsolutePath());
+					Uri images = currentStory.buildUpon().appendPath("image").build();
+					uri = getContentResolver().insert(images, values);
+					intent.setData(uri);
+					intent.setAction(Intent.ACTION_EDIT);
+					recreate();
+				} catch (IOException e) {
+					Toast.makeText(this, "image save error", Toast.LENGTH_SHORT).show();
+				}
+
 			}
 		}
 	}
@@ -108,32 +119,38 @@ public class ImageActivity extends FragmentActivity implements LoaderCallbacks<C
 				null,                           // Selection
 				null,                           // Selection args
 				null);							//sort
-		
+
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		//Picasso.with(this).load(uri).resize(500, 500).into(imageView);
+		
 		if(cursor.moveToFirst())
 		{
-//			Picasso.with(this).load(imageFile).resize(500, 500)
-//			.into(imageView);
+			//this ignores the orientation because picasso dosent
+			//expect it to be sent (wont detect the column)
+			//Picasso.with(this).load(uri).fit().centerInside().into(imageView);
+			String filePath = cursor.getString(cursor.getColumnIndex(ImageContract.COLUMN_SRC));
+			Picasso.with(this).load(new File(filePath)).fit().centerInside().into(imageView);
+
 		}
 		Log.i(TAG, "cursor get");
-		
-//		getLoaderManager()
-//		loaderManager.initLoader(0, null, loaderCallbacks);
-//		else if(match == TripMatcher.IMAGE_ITEM)
-//			(resultCode == Activity.RESULT_OK) {
-//			Picasso.with(this).load(imageFile).resize(500, 500)
-//			.into(imageView);
-//		}
-		
+
+		//		getLoaderManager()
+		//		loaderManager.initLoader(0, null, loaderCallbacks);
+		//		else if(match == TripMatcher.IMAGE_ITEM)
+		//			(resultCode == Activity.RESULT_OK) {
+		//			Picasso.with(this).load(imageFile).resize(500, 500)
+		//			.into(imageView);
+		//		}
+
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
