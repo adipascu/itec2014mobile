@@ -1,9 +1,6 @@
 package ro.epb.itec.tripmemories.ui;
 
 import ro.epb.itec.tripmemories.R;
-import ro.epb.itec.tripmemories.R.id;
-import ro.epb.itec.tripmemories.R.layout;
-import ro.epb.itec.tripmemories.R.menu;
 import ro.epb.itec.tripmemories.persistance.contracts.StoryContract;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -11,21 +8,24 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 public class StoryPickerActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
 
 
 
 	private static final int LOADER_LIST = 0;
+	private StoryAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_story_list);
-
+		ListView listView = (ListView) findViewById(R.id.list_view);
+		adapter = new StoryAdapter(this);
+		listView.setAdapter(adapter);
 		getSupportLoaderManager().initLoader(LOADER_LIST, null, this);
 	}
 
@@ -65,15 +65,14 @@ public class StoryPickerActivity extends FragmentActivity implements LoaderCallb
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Cursor> arg0, Cursor arg1) {
-		Log.i("da", "Nu");
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		adapter.swapCursor(cursor);
 
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Cursor> arg0) {
-		// TODO Auto-generated method stub
-
+	public void onLoaderReset(Loader<Cursor> loader) {
+		adapter.swapCursor(null);
 	}
 
 

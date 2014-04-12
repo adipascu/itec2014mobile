@@ -1,7 +1,16 @@
 <resources>
 
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-       
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar"></style>
+
+    <style name="TransparentTheme" parent="AppTheme">
+        <item name="android:windowActionBarOverlay">true</item>
+          <item name="android:actionBarStyle">@style/TransparentActionBar</item>
     </style>
+    
+    
+    <style name="TransparentActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">#A0FF00FF</item>
+    </style>
+    
 
 </resources>

@@ -24,6 +24,7 @@
         </provider>
 
          <activity
+             android:theme="@style/TransparentTheme"
             android:name="ro.epb.itec.tripmemories.ui.StoryPickerActivity"
             android:label="@string/app_name" >
         </activity>
