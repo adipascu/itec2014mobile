@@ -13,6 +13,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,10 +27,14 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 
 	private static final int LOADER_STORY = 0;
 	private static final int LOADER_IMAGES = 1;
+	private static final int LOADER_IMAGE_PARENT = 3;
 	private Uri uri;
-	//private StoryAdapter adapter;
-	private ImagePickerAdapter adapter;
+	
+	private ImagePickerAdapter viewAdapter;
+	private ImageSlideAdapter fragmentAdapter;
 	private Intent intent;
+	private String type;
+	private LoaderManager loaderManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,22 +44,25 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 		intent = getIntent();
 		uri = intent.getData();
 
+		loaderManager = getSupportLoaderManager();
 		if(Intent.ACTION_VIEW.equals(intent.getAction())){
 
-			String type = getContentResolver().getType(uri);
+			type = getContentResolver().getType(uri);
 			if(StoryContract.CONTENT_ITEM_TYPE.equals(type)){
 				setContentView(R.layout.story_grid_activity);
-				GridView gridView = (GridView) findViewById(R.id.grid_view);
-				adapter = new ImagePickerAdapter(this);
-				gridView.setAdapter(adapter);
+				viewAdapter = new ImagePickerAdapter(this);
+				GridView gridView = (GridView) findViewById(R.id.grid_view);				
+				gridView.setAdapter(viewAdapter);
 				gridView.setOnItemClickListener(this);
-				LoaderManager loaderManager = getSupportLoaderManager();
-				loaderManager.initLoader(LOADER_STORY, null, this);
-				loaderManager.initLoader(LOADER_IMAGES, null, this);
+				loadStory();
 			}
-			else if(ImageContract.CONTENT_DIR_TYPE.equals(type)){
-
-			}
+			else if(ImageContract.CONTENT_ITEM_TYPE.equals(type)){
+				setContentView(R.layout.story_slideshow_activity);
+				fragmentAdapter = new ImageSlideAdapter(getSupportFragmentManager());
+				ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+				viewPager.setAdapter(fragmentAdapter);
+				loaderManager.initLoader(LOADER_IMAGE_PARENT, null, this);
+			}			
 		}
 
 		
@@ -92,6 +100,7 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		switch (id) {
 		case LOADER_STORY:
+		case LOADER_IMAGE_PARENT:
 			return new CursorLoader(this,  // Context
 					uri, // URI
 					null,                	// Projection
@@ -118,7 +127,18 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 		case LOADER_STORY:
 			break;
 		case LOADER_IMAGES:
-			adapter.swapCursor(cursor);
+			if(StoryContract.CONTENT_ITEM_TYPE.equals(type)){
+				viewAdapter.swapCursor(cursor);
+			}
+			else if(ImageContract.CONTENT_ITEM_TYPE.equals(type)){
+				fragmentAdapter.swapCursor(cursor);
+			}			
+			break;
+		case LOADER_IMAGE_PARENT:
+			cursor.moveToFirst();
+			String uuid = cursor.getString(cursor.getColumnIndex(ImageContract.COLUMN_ID_STORY));
+			uri = StoryHelper.buildUri(uuid);
+			loadStory();
 			break;
 
 		default:
@@ -127,13 +147,30 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 
 	}
 
+	private void loadStory() {
+		loaderManager.initLoader(LOADER_STORY, null, this);
+		loaderManager.initLoader(LOADER_IMAGES, null, this);
+	}
+
+
+
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
 		switch (loader.getId()) {
 		case LOADER_STORY:
 			break;
 		case LOADER_IMAGES:
-			adapter.swapCursor(null);
+			if(StoryContract.CONTENT_ITEM_TYPE.equals(type)){
+				viewAdapter.swapCursor(null);
+			}
+			else if(ImageContract.CONTENT_ITEM_TYPE.equals(type)){
+				fragmentAdapter.swapCursor(null);
+			}
+			break;
+		case LOADER_IMAGE_PARENT:
+			//TODO: finish on deletion
+//			if(fragmentAdapter!=null)
+//				fragmentAdapter.swapCursor(null);
 			break;
 
 		default:
@@ -145,7 +182,7 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		Uri item = adapter.getItem(position);
+		Uri item = viewAdapter.getItem(position);
 		startActivity(new Intent(Intent.ACTION_VIEW, item));
 	}
 
