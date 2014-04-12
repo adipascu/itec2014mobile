@@ -135,8 +135,8 @@ public class ImageActivity extends FragmentActivity implements LoaderCallbacks<C
 			//this ignores the orientation because picasso dosent
 			//expect it to be sent (wont detect the column)
 			//Picasso.with(this).load(uri).fit().centerInside().into(imageView);
-			String filePath = cursor.getString(cursor.getColumnIndex(ImageContract.COLUMN_SRC));
-			Picasso.with(this).load(new File(filePath)).fit().centerInside().into(imageView);
+			File image = ImageHelper.getImageFile(cursor);
+			Picasso.with(this).load(image).fit().centerInside().into(imageView);
 
 		}
 		Log.i(TAG, "cursor get");

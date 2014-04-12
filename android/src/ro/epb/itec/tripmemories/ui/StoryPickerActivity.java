@@ -42,7 +42,7 @@ public class StoryPickerActivity extends FragmentActivity implements LoaderCallb
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.add:
+		case R.id.add_image:
 
 			return true;
 

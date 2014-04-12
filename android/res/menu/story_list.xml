@@ -2,7 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/add"
+        android:id="@+id/add_story"
+        android:title="add a story"/>
+    <item
+        android:id="@+id/add_image"
         android:title="add an image"/>
 
 </menu>

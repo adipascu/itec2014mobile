@@ -1,10 +1,12 @@
 package ro.epb.itec.tripmemories.persistance.helpers;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
 import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.media.ExifInterface;
 import android.net.Uri;
 
@@ -37,6 +39,11 @@ public class ImageHelper {
 
 	public static Uri buildUri(String id) {
 		return ImageContract.CONTENT_DIR_URI.buildUpon().appendPath(id).build();
+	}
+
+	public static File getImageFile(Cursor cursor) {
+		return new File(cursor.getString(cursor.getColumnIndex(ImageContract.COLUMN_SRC)));
+		
 	}
 
 }

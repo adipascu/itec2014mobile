@@ -1,26 +1,60 @@
 package ro.epb.itec.tripmemories.ui;
 
+import java.io.File;
+
 import ro.epb.itec.tripmemories.R;
+import ro.epb.itec.tripmemories.persistance.contracts.StoryContract;
+import ro.epb.itec.tripmemories.persistance.helpers.ImageHelper;
+import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 public class StoryAdapter extends CursorAdapter {
 
-	
+
 	private LayoutInflater inflater;
+	private ContentResolver resolver;
 
 	public StoryAdapter(Context context) {
 		super(context, null, 0);
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		resolver = context.getContentResolver();
 	}
+
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		// TODO Auto-generated method stub
+		String story_uuid = cursor.getString(cursor.getColumnIndex(StoryContract._UUID));
+		Uri imagesUri = StoryHelper.buildUri(story_uuid).buildUpon().appendPath("image").build();
+		Cursor imageCursor = resolver.query(imagesUri, null, null, null, null);
+		
+		ImageView imageView[] = new ImageView[3];
+		imageView[0] = (ImageView) view.findViewById(R.id.image_view_1);
+		imageView[1] = (ImageView) view.findViewById(R.id.image_view_2);
+		imageView[2] = (ImageView) view.findViewById(R.id.image_view_3);
+		TextView name = (TextView) view.findViewById(R.id.name);
+		
+		int i = 0;
+		while (imageCursor.moveToNext()) {
+			File image = ImageHelper.getImageFile(imageCursor);
+			Picasso.with(context).load(image).fit().centerCrop().into(imageView[i]);
+			if(i>=2)
+				break;
+			i++;
+		}
+		//TODO: what out for small albums, they should not retain the views
+		
+		name.setText(story_uuid);
 
 	}
 
