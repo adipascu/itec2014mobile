@@ -132,15 +132,16 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 			else{
 
 				try {
-
 					Uri currentStory = StoryHelper.getOrCreateCurrent(getContentResolver());
 					ContentValues values;
 					values = ImageHelper.newValues(imageFile.getAbsolutePath());
 					Uri images = StoryHelper.getImages(currentStory);
-					uri = getContentResolver().insert(images, values);
-					intent.setData(uri);
-					intent.setAction(Intent.ACTION_EDIT);
-					recreate();
+					Uri newUri = getContentResolver().insert(images, values);
+
+					Intent intent = new Intent(Intent.ACTION_EDIT, newUri);
+					startActivity(intent);
+					finish();
+					//recreate();
 				} catch (IOException e) {
 					Toast.makeText(this, "image save error", Toast.LENGTH_SHORT).show();
 				}
