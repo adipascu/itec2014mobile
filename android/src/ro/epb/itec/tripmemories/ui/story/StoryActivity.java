@@ -111,9 +111,9 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 		case R.id.add_image:
 
 			return true;
-		case R.id.edit:
-
-			return true;
+//		case R.id.edit:
+//
+//			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);

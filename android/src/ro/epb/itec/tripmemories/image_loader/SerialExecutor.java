@@ -1,4 +1,4 @@
-package ro.epb.itec.tripmemories.imageloader;
+package ro.epb.itec.tripmemories.image_loader;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;

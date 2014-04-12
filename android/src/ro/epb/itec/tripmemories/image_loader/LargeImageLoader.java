@@ -1,4 +1,4 @@
-package ro.epb.itec.tripmemories.imageloader;
+package ro.epb.itec.tripmemories.image_loader;
 
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
