@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/add_story"
+        android:id="@+id/edit"
         android:showAsAction="always"
-        android:title="add a story"/>
+        android:title="Edit story"/>
     <item
         android:id="@+id/add_image"
         android:showAsAction="always"

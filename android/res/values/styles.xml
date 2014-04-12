@@ -10,7 +10,10 @@
     
     <style name="TransparentActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:background">#A0FF00FF</item>
+          <item name="android:backgroundSplit">#A0FF00FF</item>
     </style>
+    
+    
     
 
 </resources>

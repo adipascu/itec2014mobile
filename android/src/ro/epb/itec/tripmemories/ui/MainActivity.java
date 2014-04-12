@@ -4,6 +4,7 @@ import ro.epb.itec.tripmemories.R;
 import ro.epb.itec.tripmemories.R.id;
 import ro.epb.itec.tripmemories.R.layout;
 import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
+import ro.epb.itec.tripmemories.ui.story_picker.StoryPickerActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

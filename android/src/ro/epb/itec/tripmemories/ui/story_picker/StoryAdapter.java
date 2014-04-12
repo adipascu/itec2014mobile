@@ -1,4 +1,4 @@
-package ro.epb.itec.tripmemories.ui;
+package ro.epb.itec.tripmemories.ui.story_picker;
 
 import java.io.File;
 
@@ -60,7 +60,7 @@ public class StoryAdapter extends CursorAdapter {
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		return inflater.inflate(R.layout.cell_story, parent, false);
+		return inflater.inflate(R.layout.story_list_cell, parent, false);
 	}
 
 }

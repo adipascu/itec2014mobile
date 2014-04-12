@@ -47,7 +47,7 @@ public class ImageActivity extends FragmentActivity implements LoaderCallbacks<C
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_image);
+		setContentView(R.layout.image_activity);
 		matcher = TripMatcher.Instance();
 		imageView = (ImageView) findViewById(R.id.image_view);
 		
