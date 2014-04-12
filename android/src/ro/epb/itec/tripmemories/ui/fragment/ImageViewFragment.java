@@ -3,8 +3,8 @@ package ro.epb.itec.tripmemories.ui.fragment;
 import java.io.File;
 
 import ro.epb.itec.tripmemories.R;
+import ro.epb.itec.tripmemories.imageloader.LargeImageLoader;
 import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
-import ro.epb.itec.tripmemories.ui.LargeImageLoader;
 import ro.epb.itec.tripmemories.ui.view.TouchImageView;
 import ro.epb.itec.tripmemories.ui.view.TouchImageView.StateChangeListener;
 import android.app.Activity;
