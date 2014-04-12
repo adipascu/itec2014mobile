@@ -4,6 +4,9 @@ import ro.epb.itec.tripmemories.R;
 import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
 import ro.epb.itec.tripmemories.persistance.contracts.StoryContract;
 import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
+import ro.epb.itec.tripmemories.ui.view.ToggleViewPager;
+import ro.epb.itec.tripmemories.ui.view.TouchImageView;
+import ro.epb.itec.tripmemories.ui.view.TouchImageView.StateChangeListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,7 +16,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +23,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-public class StoryActivity extends FragmentActivity implements LoaderCallbacks<Cursor>, OnItemClickListener {
+public class StoryActivity extends FragmentActivity implements LoaderCallbacks<Cursor>, OnItemClickListener, StateChangeListener {
 
 
 
@@ -35,6 +37,7 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 	private Intent intent;
 	private String type;
 	private LoaderManager loaderManager;
+	private ToggleViewPager viewPager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +62,7 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 			else if(ImageContract.CONTENT_ITEM_TYPE.equals(type)){
 				setContentView(R.layout.story_slideshow_activity);
 				fragmentAdapter = new ImageSlideAdapter(getSupportFragmentManager());
-				ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+				viewPager = (ToggleViewPager) findViewById(R.id.view_pager);
 				viewPager.setAdapter(fragmentAdapter);
 				loaderManager.initLoader(LOADER_IMAGE_PARENT, null, this);
 			}			
@@ -185,6 +188,20 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 		Uri item = viewAdapter.getItem(position);
 		startActivity(new Intent(Intent.ACTION_VIEW, item));
 	}
+
+
+
+	@Override
+	public void stateChanged(TouchImageView scaleListener, boolean isZoomed) {
+		if(viewPager!=null)
+			viewPager.setPagingEnabled(!isZoomed);
+		
+		
+	}
+
+
+
+
 
 
 }

@@ -1,11 +1,10 @@
 package ro.epb.itec.tripmemories.ui.story;
 
-import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
-import ro.epb.itec.tripmemories.persistance.helpers.ImageHelper;
 import ro.epb.itec.tripmemories.ui.fragment.ImageViewFragment;
 import android.database.Cursor;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.MotionEvent;
 
 public class ImageSlideAdapter extends FragmentStatePagerAdapter {
 
@@ -18,8 +17,7 @@ public class ImageSlideAdapter extends FragmentStatePagerAdapter {
 	@Override
 	public ImageViewFragment getItem(int position) {
 		cursor.moveToPosition(position);
-		String uuid = cursor.getString(cursor.getColumnIndex(ImageContract._UUID));
-		return ImageViewFragment.newInstance(ImageHelper.buildUri(uuid));
+		return ImageViewFragment.newInstance(cursor);
 	}
 
 	@Override
@@ -33,5 +31,7 @@ public class ImageSlideAdapter extends FragmentStatePagerAdapter {
 		this.cursor = cursor;		
 		notifyDataSetChanged();
 	}
+
+
 
 }
