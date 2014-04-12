@@ -23,56 +23,37 @@ public class ImagePickerAdapter extends CursorAdapter {
 
 
 	private LayoutInflater inflater;
-	private ContentResolver resolver;
 
 	public ImagePickerAdapter(Context context) {
 		super(context, null, 0);
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		resolver = context.getContentResolver();
 	}
 
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		String story_uuid = cursor.getString(cursor.getColumnIndex(StoryContract._UUID));
-		Uri imagesUri = StoryHelper.buildUri(story_uuid).buildUpon().appendPath("image").build();
-		Cursor imageCursor = resolver.query(imagesUri, null, null, null, null);
-
-		ImageView imageView[] = new ImageView[3];
-		imageView[0] = (ImageView) view.findViewById(R.id.image_view_1);
-		imageView[1] = (ImageView) view.findViewById(R.id.image_view_2);
-		imageView[2] = (ImageView) view.findViewById(R.id.image_view_3);
-		TextView name = (TextView) view.findViewById(R.id.name);
-
-		int i = 0;
-		while (imageCursor.moveToNext()) {
-			File image = ImageHelper.getImageFile(imageCursor);
-			Picasso.with(context).load(image).fit().centerCrop().into(imageView[i]);
-			if(i>=2)
-				break;
-			i++;
-		}
-		//TODO: what out for small albums, they should not retain the views
-
-		name.setText(story_uuid);
+		//String story_uuid = cursor.getString(cursor.getColumnIndex(StoryContract._UUID));
+		ImageView imageView = (ImageView) view;
+		File imageFile = ImageHelper.getImageFile(cursor);
+		Picasso.with(inflater.getContext()).load(imageFile).fit().centerCrop().into(imageView);
 
 	}
 
 	@Override
 	public Uri getItem(int position) {
-		Cursor cursor = getCursor();
-		if(cursor != null)
-		{
-			String story_uuid = cursor.getString(cursor.getColumnIndex(StoryContract._UUID));
-			return StoryHelper.buildUri(story_uuid);
-		}
+//		Cursor cursor = getCursor();
+//		if(cursor != null)
+//		{
+//			String story_uuid = cursor.getString(cursor.getColumnIndex(StoryContract._UUID));
+//			return StoryHelper.buildUri(story_uuid);
+//		}
 		return null;
 	}
 
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		return inflater.inflate(R.layout.story_list_cell, parent, false);
+		return inflater.inflate(R.layout.image_grid_cell, parent, false);
 	}
 
 }

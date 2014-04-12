@@ -1,6 +1,9 @@
 <resources>
 
+    <style name="AppTheme" parent="android:Theme.Holo"></style>
+    <!-- 
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar"></style>
+     -->
 
     <style name="TransparentTheme" parent="AppTheme">
         <item name="android:windowActionBarOverlay">true</item>
@@ -8,9 +11,9 @@
     </style>
     
     
-    <style name="TransparentActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">#A0FF00FF</item>
-          <item name="android:backgroundSplit">#A0FF00FF</item>
+    <style name="TransparentActionBar" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">#90000000</item>
+          <item name="android:backgroundSplit">#90000000</item>
     </style>
     
     
