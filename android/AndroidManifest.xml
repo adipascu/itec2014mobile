@@ -34,6 +34,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.PICK" />
+
+                <data android:mimeType="vnd.android.cursor.dir/ro.epb.itec.tripmemories.story" />
+            </intent-filter>
         </activity>
         <activity
             android:name="ro.epb.itec.tripmemories.ui.story.StoryActivity"

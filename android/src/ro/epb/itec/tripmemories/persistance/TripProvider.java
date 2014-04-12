@@ -121,9 +121,22 @@ public class TripProvider extends ContentProvider {
 	}
 
 	@Override
-	public int update(Uri arg0, ContentValues arg1, String arg2, String[] arg3) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+		List<String> segments = uri.getPathSegments();
+		int ret= 0;
+		switch (matcher.match(uri)) {
+		case TripMatcher.IMAGE_ITEM:
+			String whereClause = ImageContract._UUID + "=?";
+			String[] whereArgs = new String[]{segments.get(1)};
+			ret+=db.update(ImageContract.TABLE_NAME, values, whereClause, whereArgs);
+			resolver.notifyChange(StoryContract.CONTENT_DIR_URI, null);
+			break;
+
+		default:
+			throw new IllegalArgumentException("Unknown uri "+ uri);
+		}
+		resolver.notifyChange(uri, null);
+		return ret;
 	}
 
 	@Override
@@ -132,7 +145,7 @@ public class TripProvider extends ContentProvider {
 		List<String> segments = uri.getPathSegments();
 		switch (matcher.match(uri)) {
 		case TripMatcher.IMAGE_ITEM:
-			
+
 			String[] projection = new String[]{ImageContract.COLUMN_ID_STORY, ImageContract.COLUMN_SRC};
 			String[] whereArgs = new String[]{segments.get(1)};
 			//get parent id
@@ -144,7 +157,7 @@ public class TripProvider extends ContentProvider {
 			Uri parentUri = StoryHelper.buildUri(storyUuid);
 			ret+=db.delete(ImageContract.TABLE_NAME, ImageContract._UUID+"=?", whereArgs );
 			resolver.notifyChange(parentUri, null);
-			
+
 			File imageFile = ImageHelper.getImageFile(c);
 			imageFile.delete();
 			break;
@@ -160,6 +173,8 @@ public class TripProvider extends ContentProvider {
 	public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
 		return openFileHelper(uri, "r");
 	}
+
+
 
 
 }

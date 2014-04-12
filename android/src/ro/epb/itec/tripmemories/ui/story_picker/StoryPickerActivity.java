@@ -22,25 +22,39 @@ import android.widget.ListView;
 public class StoryPickerActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
 
 
-
 	private static final int LOADER_LIST = 0;
 	private StoryAdapter adapter;
+	private String action;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.story_list_activity);
+
+		action = getIntent().getAction();
+
 		ListView listView = (ListView) findViewById(R.id.list_view);
 		adapter = new StoryAdapter(this);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
+
+
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Uri story = adapter.getItem(position);
-				Intent intent = new Intent(Intent.ACTION_VIEW,story );
-				startActivity(intent);
+
+				if(Intent.ACTION_MAIN.equals(action)){
+					Intent intent = new Intent(Intent.ACTION_VIEW,story );
+					startActivity(intent);
+				}
+				else if(Intent.ACTION_PICK.equals(action)){
+					Intent resultIntent = new Intent();
+					resultIntent.setData(story);
+					setResult(RESULT_OK, resultIntent);
+					finish();
+				}
 
 			}
 		});

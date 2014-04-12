@@ -8,8 +8,10 @@ import com.squareup.picasso.Picasso;
 
 import ro.epb.itec.tripmemories.R;
 import ro.epb.itec.tripmemories.persistance.TripMatcher;
+import ro.epb.itec.tripmemories.persistance.contracts.StoryContract;
 import ro.epb.itec.tripmemories.persistance.helpers.ImageHelper;
 import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
+import ro.epb.itec.tripmemories.ui.story_picker.StoryPickerActivity;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -36,12 +38,13 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 	private static final int LOADER_IMAGE = 0;
 
 	private static final int TAKE_PHOTO_CODE = 0;
+	private static final int PICK_MOVE_CODE = 1;
 
 
 	private Intent intent;
 	private Uri uri;		
 
-	private UriMatcher matcher;
+	
 	private File imageFile;
 	private boolean isTakingSnapshot;
 	private LoaderManager loaderManager;
@@ -54,7 +57,6 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		matcher = TripMatcher.Instance();
 		intent = getIntent();
 		uri = intent.getData();
 
@@ -77,52 +79,6 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 			loaderManager = getSupportLoaderManager();
 			loaderManager.initLoader(LOADER_IMAGE, null, this);
 		}
-
-
-		//		//		show(new StylesheetQuestionFragment());
-		//		//		return;
-		//		if(intent.getAction().equals(Intent.ACTION_INSERT))
-		//		{
-		//			takeSnapshot();
-		//		}
-		//		else if(intent.getAction().equals(Intent.ACTION_EDIT))
-		//		{
-		//			
-		//			
-		//		//	Picasso.with(this).load(imageFile).fit().into(imageView);
-		//			getSupportLoaderManager().initLoader(LOADER_IMAGE, null, this);
-		//		}
-
-
-
-		//		if(Intent.ACTION_VIEW.equals(intent.getAction())){
-		//
-		//			type = getContentResolver().getType(uri);
-		//			if(StoryContract.CONTENT_ITEM_TYPE.equals(type)){
-		//				setContentView(R.layout.story_grid_activity);
-		//				viewAdapter = new ImagePickerAdapter(this);
-		//				GridView gridView = (GridView) findViewById(R.id.grid_view);				
-		//				gridView.setAdapter(viewAdapter);
-		//				gridView.setOnItemClickListener(this);
-		//				loadStory();
-		//			}
-		//			else if(ImageContract.CONTENT_ITEM_TYPE.equals(type)){
-		//				setContentView(R.layout.story_slideshow_activity);
-		//				fragmentAdapter = new ImageSlideAdapter(getSupportFragmentManager());
-		//				viewPager = (ToggleViewPager) findViewById(R.id.view_pager);
-		//				//todo: change offscreen limit SD vs HD
-		//				viewPager.setOffscreenPageLimit(4);
-		//
-		//				viewPager.setAdapter(fragmentAdapter);
-		//				loaderManager.initLoader(LOADER_IMAGE_PARENT, null, this);
-		//			}			
-		//		}
-		//		if(VERSION.SDK_INT >= VERSION_CODES.KITKAT)
-		//			setImmersive(true);
-		//
-		//		//setFullscreen(true);
-
-
 	}
 
 
@@ -130,16 +86,12 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if(requestCode == TAKE_PHOTO_CODE)
+		{
 			isTakingSnapshot = false;
-		else return;
-
-		int match = matcher.match(uri);
-		if(match == TripMatcher.IMAGE_DIR){
 			if(resultCode == Activity.RESULT_CANCELED){
 				finish();
 			}
 			else{
-
 				try {
 					Uri currentStory = StoryHelper.getOrCreateCurrent(getContentResolver());
 					ContentValues values;
@@ -153,9 +105,18 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 					//recreate();
 				} catch (IOException e) {
 					Toast.makeText(this, "image save error", Toast.LENGTH_SHORT).show();
+					finish();
 				}
 			}
 		}
+		else if(requestCode == PICK_MOVE_CODE){
+			if(Activity.RESULT_OK == resultCode){
+				Uri storyUri = data.getData();
+				ImageHelper.moveTo(getContentResolver(),uri, storyUri);
+				Toast.makeText(this, "Moving image to story...", Toast.LENGTH_SHORT).show();
+			}
+		}
+
 	}
 
 
@@ -173,6 +134,10 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 		case R.id.delete:
 			getContentResolver().delete(uri, null, null);
 			Toast.makeText(this, "Deleting image...", Toast.LENGTH_SHORT).show();
+			return true;
+		case R.id.move:
+			Intent intent = new Intent(Intent.ACTION_PICK, StoryContract.CONTENT_DIR_URI);
+			startActivityForResult(intent, PICK_MOVE_CODE);
 			return true;
 
 		default:

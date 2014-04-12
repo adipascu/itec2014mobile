@@ -44,7 +44,14 @@ public class ImageHelper {
 
 	public static File getImageFile(Cursor cursor) {
 		return new File(cursor.getString(cursor.getColumnIndex(ImageContract.COLUMN_SRC)));
-		
+
+	}
+
+	public static void moveTo(ContentResolver contentResolver, Uri imageUri, Uri storyUri) {
+		String story = storyUri.getLastPathSegment();
+		ContentValues values = new ContentValues(1);
+		values.put(ImageContract.COLUMN_ID_STORY, story);
+		contentResolver.update(imageUri, values, null, null);		
 	}
 
 
