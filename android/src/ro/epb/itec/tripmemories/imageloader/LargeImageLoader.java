@@ -16,37 +16,49 @@ import com.squareup.picasso.Target;
 
 public class LargeImageLoader {
 
-	private static Executor serialExecuter = new SerialExecutor();
-
+	private static Executor serialExecuter;
+//TODO: add these prefs
+	// column count ovveride
+	//hd mode
+	//sd mode set resolution
 	public static void load(final Context context, final File file, final TouchImageView view){
-		
-		
+		boolean hdMode = false;
+		if(hdMode){
+			loadHD(context, file, view);
+		}
+		else{
+			loadSD(context, file, view, 1000);
+		}
+	}
+
+	private static void loadSD(Context context, File file, TouchImageView view, int size) {
+		Picasso.with(context).load(file).resize(size, size).centerInside().into(view);
+	}
+
+	private static void loadHD(final Context context, final File file, final TouchImageView view) {
 		AsyncTask<Void, Void, Bitmap> loadTask = new AsyncTask<Void, Void, Bitmap>() {
 			Bitmap rez;
 			@Override
 			protected Bitmap doInBackground(Void... params) {
 				final CountDownLatch latch = new CountDownLatch(1);
-				
-				Picasso.with(context).load(file).skipMemoryCache().resize(100, 100).into(new Target() {
-					
+				Picasso.with(context).load(file).skipMemoryCache().into(new Target() {
+
 					@Override
 					public void onPrepareLoad(Drawable placeHolderDrawable) {
-						latch.countDown();
 					}
-					
+
 					@Override
 					public void onBitmapLoaded(Bitmap bitmap, LoadedFrom from) {
 						rez = bitmap;
-						latch.countDown();
-						
+						latch.countDown();						
 					}
-					
+
 					@Override
 					public void onBitmapFailed(Drawable errorDrawable) { 
 						latch.countDown();
 					}
 				});
-				
+
 				try {
 					latch.await();
 				} catch (InterruptedException e) {
@@ -54,46 +66,17 @@ public class LargeImageLoader {
 				}
 				return rez;
 			}
-			
+
 			@Override
-		    protected void onPostExecute(Bitmap result) {
+			protected void onPostExecute(Bitmap result) {
 				if(result != null)
 					view.setImageBitmap(result);
-		    }
+			}
 		};
-		
+		if(serialExecuter== null)
+			serialExecuter = new SerialExecutor();
 		loadTask.executeOnExecutor(serialExecuter);
-		
-//			TouchImageView view) {
-////		Picasso.with(getActivity()).load(new File(imagePath)).skipMemoryCache().into(view);
-//			Picasso.with(getActivity()).load(new File(imagePath)).skipMemoryCache().into(new Target() {
-//				
-//				@Override
-//				public void onPrepareLoad(Drawable placeHolderDrawable) {
-//					Log.i("PREP", "PREP");
-//				}
-//				
-//				@Override
-//				public void onBitmapLoaded(Bitmap bitmap, LoadedFrom from) {
-//					view.setImageBitmap(bitmap);
-//					Log.i("WIN", "WIN");
-//				}
-//				
-//				@Override
-//				public void onBitmapFailed(Drawable errorDrawable) {
-//					Log.i("FAIL", "FAIL");
-//				}
-//			});
-////			
-////			Runnable run = new Runnable() {
-////				
-////				@Override
-////				public void run() {
-////					Picasso.with(getActivity()).load(new File(imagePath)).fit().noFade().into(view);
-////					view.postDelayed(this, 2000);
-////				}
-////			};
-////			view.postDelayed(run, 2000);
+
 	}
 
 }

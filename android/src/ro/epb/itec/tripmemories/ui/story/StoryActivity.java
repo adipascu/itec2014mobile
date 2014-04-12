@@ -63,6 +63,9 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 				setContentView(R.layout.story_slideshow_activity);
 				fragmentAdapter = new ImageSlideAdapter(getSupportFragmentManager());
 				viewPager = (ToggleViewPager) findViewById(R.id.view_pager);
+				//todo: change offscreen limit SD vs HD
+				viewPager.setOffscreenPageLimit(4);
+				
 				viewPager.setAdapter(fragmentAdapter);
 				loaderManager.initLoader(LOADER_IMAGE_PARENT, null, this);
 			}			
