@@ -2,6 +2,7 @@ package ro.epb.itec.tripmemories.ui.story_picker;
 
 import ro.epb.itec.tripmemories.R;
 import ro.epb.itec.tripmemories.persistance.contracts.StoryContract;
+import ro.epb.itec.tripmemories.persistance.helpers.ImageHelper;
 import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
 import android.content.Intent;
 import android.database.Cursor;
@@ -59,8 +60,8 @@ public class StoryPickerActivity extends FragmentActivity implements LoaderCallb
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.add_image:
-
+		case R.id.add_story:
+			StoryHelper.CreateCurrent(getContentResolver());
 			return true;
 
 		default:

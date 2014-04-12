@@ -53,10 +53,14 @@ public class StoryHelper {
 	public static Uri getOrCreateCurrent(ContentResolver contentResolver) {
 		Uri current = getCurrent(contentResolver);
 		if(current == null){
-			ContentValues values = newValues();
-			current = contentResolver.insert(StoryContract.CONTENT_DIR_URI, values);
+			current = CreateCurrent(contentResolver);
 		}
 		return current;
+	}
+
+	public static Uri CreateCurrent(ContentResolver contentResolver) {
+		ContentValues values = newValues();
+		return contentResolver.insert(StoryContract.CONTENT_DIR_URI, values);
 	}
 
 	public static Uri getImages(Uri story) {
