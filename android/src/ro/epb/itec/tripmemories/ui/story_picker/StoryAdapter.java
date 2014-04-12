@@ -61,12 +61,10 @@ public class StoryAdapter extends CursorAdapter {
 	@Override
 	public Uri getItem(int position) {
 		Cursor cursor = getCursor();
-		if(cursor != null)
-		{
-			String story_uuid = cursor.getString(cursor.getColumnIndex(StoryContract._UUID));
-			return StoryHelper.buildUri(story_uuid);
-		}
-		return null;
+		cursor.moveToPosition(position);
+		String uuid = cursor.getString(cursor.getColumnIndex(StoryContract._UUID));
+		return StoryHelper.buildUri(uuid);
+
 	}
 
 

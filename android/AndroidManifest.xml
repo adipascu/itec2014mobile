@@ -41,6 +41,13 @@
 
                 <data android:mimeType="vnd.android.cursor.item/ro.epb.itec.tripmemories.story" />
             </intent-filter>
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <data android:mimeType="vnd.android.cursor.item/ro.epb.itec.tripmemories.image" />
+            </intent-filter>
         </activity>
         <activity
             android:name="ro.epb.itec.tripmemories.ui.MainActivity"
@@ -64,7 +71,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.EDIT" />
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.ALTERNATIVE" />
 
                 <data android:mimeType="vnd.android.cursor.item/ro.epb.itec.tripmemories.image" />
             </intent-filter>

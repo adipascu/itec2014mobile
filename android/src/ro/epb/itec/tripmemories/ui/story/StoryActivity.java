@@ -1,6 +1,8 @@
 package ro.epb.itec.tripmemories.ui.story;
 
 import ro.epb.itec.tripmemories.R;
+import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
+import ro.epb.itec.tripmemories.persistance.contracts.StoryContract;
 import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,9 +15,12 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-public class StoryActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
+public class StoryActivity extends FragmentActivity implements LoaderCallbacks<Cursor>, OnItemClickListener {
 
 
 
@@ -24,20 +29,35 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 	private Uri uri;
 	//private StoryAdapter adapter;
 	private ImagePickerAdapter adapter;
+	private Intent intent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.story_activity);
-		GridView gridView = (GridView) findViewById(R.id.grid_view);
+		
 
-		Intent intent = getIntent();
+		intent = getIntent();
 		uri = intent.getData();
-		adapter = new ImagePickerAdapter(this);
-		gridView.setAdapter(adapter);
-		LoaderManager loaderManager = getSupportLoaderManager();
-		loaderManager.initLoader(LOADER_STORY, null, this);
-		loaderManager.initLoader(LOADER_IMAGES, null, this);
+
+		if(Intent.ACTION_VIEW.equals(intent.getAction())){
+
+			String type = getContentResolver().getType(uri);
+			if(StoryContract.CONTENT_ITEM_TYPE.equals(type)){
+				setContentView(R.layout.story_grid_activity);
+				GridView gridView = (GridView) findViewById(R.id.grid_view);
+				adapter = new ImagePickerAdapter(this);
+				gridView.setAdapter(adapter);
+				gridView.setOnItemClickListener(this);
+				LoaderManager loaderManager = getSupportLoaderManager();
+				loaderManager.initLoader(LOADER_STORY, null, this);
+				loaderManager.initLoader(LOADER_IMAGES, null, this);
+			}
+			else if(ImageContract.CONTENT_DIR_TYPE.equals(type)){
+
+			}
+		}
+
+		
 	}
 
 
@@ -119,6 +139,14 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 		default:
 			throw new UnsupportedOperationException("unknown loader id");
 		}
+	}
+
+
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		Uri item = adapter.getItem(position);
+		startActivity(new Intent(Intent.ACTION_VIEW, item));
 	}
 
 

@@ -3,10 +3,8 @@ package ro.epb.itec.tripmemories.ui.story;
 import java.io.File;
 
 import ro.epb.itec.tripmemories.R;
-import ro.epb.itec.tripmemories.persistance.contracts.StoryContract;
+import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
 import ro.epb.itec.tripmemories.persistance.helpers.ImageHelper;
-import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -15,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -41,13 +38,10 @@ public class ImagePickerAdapter extends CursorAdapter {
 
 	@Override
 	public Uri getItem(int position) {
-//		Cursor cursor = getCursor();
-//		if(cursor != null)
-//		{
-//			String story_uuid = cursor.getString(cursor.getColumnIndex(StoryContract._UUID));
-//			return StoryHelper.buildUri(story_uuid);
-//		}
-		return null;
+		Cursor cursor = getCursor();
+		cursor.moveToPosition(position);
+		String uuid = cursor.getString(cursor.getColumnIndex(ImageContract._UUID));
+		return ImageHelper.buildUri(uuid);
 	}
 
 

@@ -2,12 +2,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ro.epb.itec.tripmemories.ui.view.TouchImageView
-        android:id="@+id/image_view"
+    <GridView
+        android:id="@+id/grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_launcher"/>
-
-
+        android:clipToPadding="false"
+        android:numColumns="2"
+        android:paddingBottom="?android:attr/actionBarSize"
+        android:paddingTop="?android:attr/actionBarSize" >
+    </GridView>
 
 </RelativeLayout>
