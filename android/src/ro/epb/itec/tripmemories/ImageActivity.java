@@ -15,6 +15,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -74,7 +75,8 @@ public class ImageActivity extends FragmentActivity implements LoaderCallbacks<C
 		if(isTakingSnapshot)
 			return;
 		isTakingSnapshot = true;
-		imageFile = new File(getExternalCacheDir(), UUID.randomUUID() + ".jpeg");
+		File dir = getExternalFilesDir(Environment.DIRECTORY_DCIM);
+		imageFile = new File(dir, UUID.randomUUID() + ".jpeg");
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imageFile));
 		startActivityForResult(captureIntent, TAKE_PHOTO_CODE);
@@ -106,7 +108,6 @@ public class ImageActivity extends FragmentActivity implements LoaderCallbacks<C
 				} catch (IOException e) {
 					Toast.makeText(this, "image save error", Toast.LENGTH_SHORT).show();
 				}
-
 			}
 		}
 	}
