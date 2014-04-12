@@ -1,5 +1,6 @@
 package ro.epb.itec.tripmemories.persistance;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
@@ -132,7 +133,7 @@ public class TripProvider extends ContentProvider {
 		switch (matcher.match(uri)) {
 		case TripMatcher.IMAGE_ITEM:
 			
-			String[] projection = new String[]{ImageContract.COLUMN_ID_STORY};
+			String[] projection = new String[]{ImageContract.COLUMN_ID_STORY, ImageContract.COLUMN_SRC};
 			String[] whereArgs = new String[]{segments.get(1)};
 			//get parent id
 			Cursor c = query(uri, projection , ImageContract._UUID+"=?", whereArgs, null);
@@ -144,7 +145,8 @@ public class TripProvider extends ContentProvider {
 			ret+=db.delete(ImageContract.TABLE_NAME, ImageContract._UUID+"=?", whereArgs );
 			resolver.notifyChange(parentUri, null);
 			
-			
+			File imageFile = ImageHelper.getImageFile(c);
+			imageFile.delete();
 			break;
 
 		default:

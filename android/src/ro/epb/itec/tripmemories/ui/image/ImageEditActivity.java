@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+import com.squareup.picasso.Picasso;
+
 import ro.epb.itec.tripmemories.R;
 import ro.epb.itec.tripmemories.persistance.TripMatcher;
 import ro.epb.itec.tripmemories.persistance.helpers.ImageHelper;
@@ -24,6 +26,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class ImageEditActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
@@ -42,6 +45,8 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 	private File imageFile;
 	private boolean isTakingSnapshot;
 	private LoaderManager loaderManager;
+
+	private ImageView imageView;
 
 
 
@@ -65,6 +70,10 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 			startActivityForResult(captureIntent, TAKE_PHOTO_CODE);
 		}
 		else if(Intent.ACTION_EDIT.equals(intent.getAction())){
+			setContentView(R.layout.image_edit_activity);
+
+			imageView = (ImageView) findViewById(R.id.image_view);
+
 			loaderManager = getSupportLoaderManager();
 			loaderManager.initLoader(LOADER_IMAGE, null, this);
 		}
@@ -163,6 +172,7 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 		switch (item.getItemId()) {
 		case R.id.delete:
 			getContentResolver().delete(uri, null, null);
+			Toast.makeText(this, "Deleting image...", Toast.LENGTH_SHORT).show();
 			return true;
 
 		default:
@@ -194,6 +204,12 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		switch (loader.getId()) {
 		case LOADER_IMAGE:
+			if(cursor.moveToFirst()){
+				File image = ImageHelper.getImageFile(cursor);
+				Picasso.with(this).load(image).fit().centerInside().into(imageView);
+			}
+			else
+				finish();
 			break;
 
 
