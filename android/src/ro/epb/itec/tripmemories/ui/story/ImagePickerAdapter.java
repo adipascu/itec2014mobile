@@ -1,4 +1,4 @@
-package ro.epb.itec.tripmemories.ui.story_picker;
+package ro.epb.itec.tripmemories.ui.story;
 
 import java.io.File;
 
@@ -19,13 +19,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-public class StoryAdapter extends CursorAdapter {
+public class ImagePickerAdapter extends CursorAdapter {
 
 
 	private LayoutInflater inflater;
 	private ContentResolver resolver;
 
-	public StoryAdapter(Context context) {
+	public ImagePickerAdapter(Context context) {
 		super(context, null, 0);
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		resolver = context.getContentResolver();

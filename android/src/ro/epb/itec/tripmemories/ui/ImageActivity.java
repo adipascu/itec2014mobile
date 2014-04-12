@@ -103,7 +103,7 @@ public class ImageActivity extends FragmentActivity implements LoaderCallbacks<C
 					Uri currentStory = StoryHelper.getOrCreateCurrent(getContentResolver());
 					ContentValues values;
 					values = ImageHelper.newValues(imageFile.getAbsolutePath());
-					Uri images = currentStory.buildUpon().appendPath("image").build();
+					Uri images = StoryHelper.getImages(currentStory);
 					uri = getContentResolver().insert(images, values);
 					intent.setData(uri);
 					intent.setAction(Intent.ACTION_EDIT);

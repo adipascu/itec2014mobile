@@ -59,6 +59,10 @@ public class StoryHelper {
 		return current;
 	}
 
+	public static Uri getImages(Uri story) {
+		return story.buildUpon().appendPath("image").build();
+	}
+
 
 
 }

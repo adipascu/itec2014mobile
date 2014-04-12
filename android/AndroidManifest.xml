@@ -29,14 +29,19 @@
             android:theme="@style/TransparentTheme"
             android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
-        
         <activity
             android:name="ro.epb.itec.tripmemories.ui.story.StoryActivity"
             android:label="@string/app_name"
             android:theme="@style/TransparentTheme"
             android:uiOptions="splitActionBarWhenNarrow" >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <data android:mimeType="vnd.android.cursor.item/ro.epb.itec.tripmemories.story" />
+            </intent-filter>
         </activity>
-        
         <activity
             android:name="ro.epb.itec.tripmemories.ui.MainActivity"
             android:label="@string/app_name" >

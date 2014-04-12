@@ -1,13 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:paddingTop="?android:attr/actionBarSize" >
 
-    <ImageView
-        android:id="@+id/image_view"
+    <GridView
+        android:id="@+id/grid_view"
+        android:numColumns="2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/ic_launcher"/>
-
-
+        android:layout_height="match_parent" >
+    </GridView>
 
 </RelativeLayout>

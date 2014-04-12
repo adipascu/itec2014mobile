@@ -2,7 +2,10 @@ package ro.epb.itec.tripmemories.ui.story_picker;
 
 import ro.epb.itec.tripmemories.R;
 import ro.epb.itec.tripmemories.persistance.contracts.StoryContract;
+import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -10,6 +13,9 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 public class StoryPickerActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
@@ -26,6 +32,17 @@ public class StoryPickerActivity extends FragmentActivity implements LoaderCallb
 		ListView listView = (ListView) findViewById(R.id.list_view);
 		adapter = new StoryAdapter(this);
 		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Uri story = adapter.getItem(position);
+				Intent intent = new Intent(Intent.ACTION_VIEW,story );
+				startActivity(intent);
+
+			}
+		});
 		getSupportLoaderManager().initLoader(LOADER_LIST, null, this);
 	}
 
