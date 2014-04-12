@@ -1,9 +1,12 @@
-package ro.epb.itec.tripmemories;
+package ro.epb.itec.tripmemories.ui;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+import ro.epb.itec.tripmemories.R;
+import ro.epb.itec.tripmemories.R.id;
+import ro.epb.itec.tripmemories.R.layout;
 import ro.epb.itec.tripmemories.persistance.TripMatcher;
 import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
 import ro.epb.itec.tripmemories.persistance.helpers.ImageHelper;
@@ -27,7 +30,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-public class ImageActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
+public class StoryActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
 
 	private static final int TAKE_PHOTO_CODE = 0;
 	private static final String TAG = "ImageActivity";

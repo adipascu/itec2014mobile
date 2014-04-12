@@ -23,8 +23,13 @@
             android:exported="false" >
         </provider>
 
+         <activity
+            android:name="ro.epb.itec.tripmemories.ui.StoryPickerActivity"
+            android:label="@string/app_name" >
+        </activity>
+        
         <activity
-            android:name="ro.epb.itec.tripmemories.MainActivity"
+            android:name="ro.epb.itec.tripmemories.ui.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +38,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="ro.epb.itec.tripmemories.ImageActivity"
+            android:name="ro.epb.itec.tripmemories.ui.ImageActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />

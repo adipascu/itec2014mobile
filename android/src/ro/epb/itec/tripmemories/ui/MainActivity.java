@@ -1,7 +1,9 @@
-package ro.epb.itec.tripmemories;
+package ro.epb.itec.tripmemories.ui;
 
+import ro.epb.itec.tripmemories.R;
+import ro.epb.itec.tripmemories.R.id;
+import ro.epb.itec.tripmemories.R.layout;
 import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
-import ro.epb.itec.tripmemories.persistance.helpers.ImageHelper;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +17,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+		startActivity(new Intent(this, StoryPickerActivity.class));
+
 		findViewById(R.id.button).setOnClickListener(this);
 
 	}
