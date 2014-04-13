@@ -18,9 +18,7 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/AppTheme" >
-        <!--  android:grantUriPermissions="true" -->
         <provider
-           
             android:name="ro.epb.itec.tripmemories.persistance.TripProvider"
             android:authorities="ro.epb.itec.tripmemories.provider"
             android:exported="false"

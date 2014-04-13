@@ -1,9 +1,9 @@
 package ro.epb.itec.tripmemories.persistance.contracts;
 
-import android.net.Uri;
 import ro.epb.itec.tripmemories.persistance.SyncColumns;
 import ro.epb.itec.tripmemories.persistance.TripMatcher;
-import ro.epb.itec.tripmemories.persistance.TripProvider;
+import android.net.Uri;
+import android.provider.MediaStore;
 
 
 public class StoryContract implements SyncColumns{
@@ -11,7 +11,7 @@ public class StoryContract implements SyncColumns{
 	public static final String TABLE_NAME = "story";
 	public static final String COLUMN_NAME_START = "start";
 	public static final String COLUMN_NAME_END = "end";
-	
+	public static final String COLUMN_DISPLAY_NAME = MediaStore.MediaColumns.DISPLAY_NAME;
 
 
 

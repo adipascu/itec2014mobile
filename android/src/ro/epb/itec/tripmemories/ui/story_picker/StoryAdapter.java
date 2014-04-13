@@ -11,6 +11,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.widget.CursorAdapter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,15 +47,23 @@ public class StoryAdapter extends CursorAdapter {
 
 		int i = 0;
 		while (imageCursor.moveToNext()) {
+			if(i>2)
+				break;
 			File image = ImageHelper.getImageFile(imageCursor);
 			Picasso.with(context).load(image).fit().centerCrop().into(imageView[i]);
-			if(i>=2)
-				break;
+			imageView[i].setVisibility(View.VISIBLE);
+			
 			i++;
 		}
+		for(; i<3 ;i++){
+			imageView[i].setVisibility(View.GONE);
+		}
 		//TODO: what out for small albums, they should not retain the views
-
-		name.setText(story_uuid);
+		
+		String displayName = cursor.getString(cursor.getColumnIndex(StoryContract.COLUMN_DISPLAY_NAME));
+		if(TextUtils.isEmpty(displayName))
+			displayName = "Unnamed Story";
+		name.setText(displayName);
 
 	}
 
