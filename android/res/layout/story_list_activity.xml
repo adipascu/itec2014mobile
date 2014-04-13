@@ -11,4 +11,13 @@
         android:paddingTop="?android:attr/actionBarSize" >
     </ListView>
 
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="There are no stories yet !"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="gone" />
+
 </RelativeLayout>

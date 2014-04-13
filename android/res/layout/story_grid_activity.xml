@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/container" >
+    android:layout_height="match_parent" >
 
     <GridView
         android:id="@+id/grid_view"
@@ -12,5 +12,14 @@
         android:paddingBottom="?android:attr/actionBarSize"
         android:paddingTop="?android:attr/actionBarSize" >
     </GridView>
+
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="There are no images yet !"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="gone" />
 
 </RelativeLayout>

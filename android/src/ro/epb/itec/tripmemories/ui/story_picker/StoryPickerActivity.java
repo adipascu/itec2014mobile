@@ -8,6 +8,7 @@ import ro.epb.itec.tripmemories.ui.settings.SettingsActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -26,15 +27,17 @@ public class StoryPickerActivity extends FragmentActivity implements LoaderCallb
 	private static final int LOADER_LIST = 0;
 	private StoryAdapter adapter;
 	private String action;
+	View emptyView;
+	private ListView listView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.story_list_activity);
-
+		emptyView = findViewById(R.id.empty);
 		action = getIntent().getAction();
 
-		ListView listView = (ListView) findViewById(R.id.list_view);
+		listView = (ListView) findViewById(R.id.list_view);
 		adapter = new StoryAdapter(this);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -109,6 +112,15 @@ public class StoryPickerActivity extends FragmentActivity implements LoaderCallb
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		adapter.swapCursor(cursor);
+		if(cursor.getCount() == 0){
+			emptyView.setVisibility(View.VISIBLE);
+			listView.setVisibility(View.GONE);
+		}
+		else{
+			emptyView.setVisibility(View.GONE);
+			listView.setVisibility(View.VISIBLE);
+		}
+
 
 	}
 

@@ -1,12 +1,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/container" >
+    android:layout_height="match_parent" >
 
     <ro.epb.itec.tripmemories.ui.view.ToggleViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
     </ro.epb.itec.tripmemories.ui.view.ToggleViewPager>
+
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="There are no images yet !"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="gone" />
 
 </RelativeLayout>

@@ -52,6 +52,7 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 	private Uri imageUri;
 	private View rootView;
 	private boolean isFullScreen;
+	private View emptyView;
 
 
 
@@ -81,6 +82,7 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 
 
 		rootView = findViewById(R.id.container);
+		emptyView = findViewById(R.id.empty);
 	}
 
 
@@ -203,6 +205,12 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 				finish();
 			break;
 		case LOADER_IMAGES:
+			if(cursor.getCount() == 0){
+				emptyView.setVisibility(View.VISIBLE);
+			}
+			else{
+				emptyView.setVisibility(View.GONE);;
+			}
 			if(StoryContract.CONTENT_ITEM_TYPE.equals(type)){
 				viewAdapter.swapCursor(cursor);
 			}
