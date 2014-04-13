@@ -102,7 +102,7 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 						currentStory = (Uri)extras.getParcelable(EXTRA_STORY);
 					if(currentStory == null)
 						currentStory = StoryHelper.getOrCreateCurrent(getContentResolver());
-					
+
 					ContentValues values;
 					values = ImageHelper.newValues(imageFile.getAbsolutePath());
 					Uri images = StoryHelper.getImages(currentStory);
@@ -193,7 +193,7 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 				File image = ImageHelper.getImageFile(cursor);
 				Picasso.with(this).load(image).placeholder(R.drawable.spinner)
 				.fit().centerInside().into(imageView);
-				
+
 				String exportStr = cursor.getString(cursor.getColumnIndex(ImageContract.COLUMN_DISPLAY_NAME));
 				exportName.setText(exportStr);
 			}
@@ -215,8 +215,9 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 	@Override
 	protected void onPause() {
 		ContentValues values = new ContentValues(1);
-		values.put(ImageContract.COLUMN_DISPLAY_NAME, exportName.getText().toString());
-		getContentResolver().update(uri, values, null, null);
+		if(exportName!= null){//hotfix for android 4.2
+			values.put(ImageContract.COLUMN_DISPLAY_NAME, exportName.getText().toString());
+			getContentResolver().update(uri, values, null, null);}
 		super.onPause();
 	}
 

@@ -20,13 +20,13 @@ public class TripMatcher {
 		if(matcher == null){
 			matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-			matcher.addURI(CONTENT_AUTHORITY, "/story", STORY_DIR);		
-			matcher.addURI(CONTENT_AUTHORITY, "/story/*", STORY_ITEM);
+			matcher.addURI(CONTENT_AUTHORITY, "story", STORY_DIR);		
+			matcher.addURI(CONTENT_AUTHORITY, "story/*", STORY_ITEM);
 
-			matcher.addURI(CONTENT_AUTHORITY, "/story/*/image", STORY_IMAGE_DIR);
-			matcher.addURI(CONTENT_AUTHORITY, "/image/*", IMAGE_ITEM);
+			matcher.addURI(CONTENT_AUTHORITY, "story/*/image", STORY_IMAGE_DIR);
+			matcher.addURI(CONTENT_AUTHORITY, "image/*", IMAGE_ITEM);
 
-			matcher.addURI(CONTENT_AUTHORITY, "/image", IMAGE_DIR);
+			matcher.addURI(CONTENT_AUTHORITY, "image", IMAGE_DIR);
 		}
 		return matcher;
 	}
