@@ -21,7 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class ImageViewFragment extends Fragment{
-
+ 
 	private static final String ARG_IMAGE_PATH = "imagePath";
 	private static final String ARG_IMAGE_URI = "imageUri";
 	
