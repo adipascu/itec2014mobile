@@ -93,6 +93,11 @@
                 <data android:mimeType="vnd.android.cursor.item/ro.epb.itec.tripmemories.story" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="ro.epb.itec.tripmemories.ui.settings.SettingsActivity"
+            android:label="Settings"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
     </application>
 
 </manifest>

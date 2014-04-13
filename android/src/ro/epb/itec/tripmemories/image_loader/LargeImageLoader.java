@@ -4,8 +4,10 @@ import java.io.File;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
+import ro.epb.itec.tripmemories.persistance.preferences.PrefsHelper;
 import ro.epb.itec.tripmemories.ui.view.TouchImageView;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -17,12 +19,15 @@ import com.squareup.picasso.Target;
 public class LargeImageLoader {
 
 	private static Executor serialExecuter;
-//TODO: add these prefs
+	private static SharedPreferences prefs;
+	//TODO: add these prefs
 	// column count ovveride
 	//hd mode
 	//sd mode set resolution
 	public static void load(final Context context, final File file, final TouchImageView view){
-		boolean hdMode = false;
+		if(prefs == null)
+			prefs = PrefsHelper.getGlobalPrefs(context);
+		boolean hdMode = prefs.getBoolean(PrefsHelper.PREF_HD, false);
 		if(hdMode){
 			loadHD(context, file, view);
 		}

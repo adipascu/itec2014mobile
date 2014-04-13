@@ -4,11 +4,13 @@ import ro.epb.itec.tripmemories.R;
 import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
 import ro.epb.itec.tripmemories.persistance.contracts.StoryContract;
 import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
+import ro.epb.itec.tripmemories.persistance.preferences.PrefsHelper;
 import ro.epb.itec.tripmemories.ui.view.ToggleViewPager;
 import ro.epb.itec.tripmemories.ui.view.TouchImageView;
 import ro.epb.itec.tripmemories.ui.view.TouchImageView.StateChangeListener;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -84,7 +86,13 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 		fragmentAdapter = new ImageSlideAdapter(getSupportFragmentManager());
 		viewPager = (ToggleViewPager) findViewById(R.id.view_pager);
 		//todo: change offscreen limit SD vs HD
-		viewPager.setOffscreenPageLimit(4);
+		
+		SharedPreferences prefs = PrefsHelper.getGlobalPrefs(this);
+		boolean isHd = prefs.getBoolean(PrefsHelper.PREF_HD, false);
+		if(isHd)
+			viewPager.setOffscreenPageLimit(2);
+		else
+			viewPager.setOffscreenPageLimit(4);
 
 
 		viewPager.setAdapter(fragmentAdapter);
