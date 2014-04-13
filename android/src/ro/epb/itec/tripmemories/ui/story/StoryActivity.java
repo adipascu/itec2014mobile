@@ -7,14 +7,13 @@ import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
 import ro.epb.itec.tripmemories.ui.view.ToggleViewPager;
 import ro.epb.itec.tripmemories.ui.view.TouchImageView;
 import ro.epb.itec.tripmemories.ui.view.TouchImageView.StateChangeListener;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
@@ -33,20 +32,20 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 	private static final int LOADER_STORY = 0;
 	private static final int LOADER_IMAGES = 1;
 	private static final int LOADER_IMAGE_PARENT = 3;
-	
+
 
 	private ImagePickerAdapter viewAdapter;
 	private ImageSlideAdapter fragmentAdapter;
-	
+
 	private ToggleViewPager viewPager;
 	private LoaderManager loaderManager;
-	
+
 	private Intent intent;
 	private String action;
 	private Uri uri;
 	private String type;
 	private Uri imageUri;
-	
+
 
 
 
@@ -58,7 +57,7 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 		loaderManager = getSupportLoaderManager();
 
 		intent = getIntent();
-		
+
 		action = intent.getAction();	
 		uri = intent.getData();
 		type = getContentResolver().getType(uri);
@@ -85,8 +84,8 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 		viewPager = (ToggleViewPager) findViewById(R.id.view_pager);
 		//todo: change offscreen limit SD vs HD
 		viewPager.setOffscreenPageLimit(4);
-		
-		
+
+
 		viewPager.setAdapter(fragmentAdapter);
 		loaderManager.initLoader(LOADER_IMAGE_PARENT, null, this);
 	}
@@ -131,9 +130,10 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 			Intent intent = new Intent(Intent.ACTION_INSERT, ImageContract.CONTENT_DIR_URI);
 			startActivity(intent);
 			return true;
-			//		case R.id.edit:
-			//
-			//			return true;
+		case R.id.edit_story:
+			Intent intent2 = new Intent(Intent.ACTION_EDIT, uri);
+			startActivity(intent2);
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);

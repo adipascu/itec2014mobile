@@ -125,12 +125,16 @@ public class TripProvider extends ContentProvider {
 	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 		List<String> segments = uri.getPathSegments();
 		int ret= 0;
+		String whereClause = SyncColumns._UUID + "=?";
+		String[] whereArgs = new String[]{segments.get(1)};
 		switch (matcher.match(uri)) {
-		case TripMatcher.IMAGE_ITEM:
-			String whereClause = ImageContract._UUID + "=?";
-			String[] whereArgs = new String[]{segments.get(1)};
+		case TripMatcher.IMAGE_ITEM:			
 			ret+=db.update(ImageContract.TABLE_NAME, values, whereClause, whereArgs);
 			resolver.notifyChange(StoryContract.CONTENT_DIR_URI, null);
+			break;
+
+		case TripMatcher.STORY_ITEM:
+			ret+=db.update(StoryContract.TABLE_NAME, values, whereClause, whereArgs);
 			break;
 
 		default:
