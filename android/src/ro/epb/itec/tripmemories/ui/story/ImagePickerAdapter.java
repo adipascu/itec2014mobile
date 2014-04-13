@@ -32,7 +32,8 @@ public class ImagePickerAdapter extends CursorAdapter {
 		//String story_uuid = cursor.getString(cursor.getColumnIndex(StoryContract._UUID));
 		ImageView imageView = (ImageView) view;
 		File imageFile = ImageHelper.getImageFile(cursor);
-		Picasso.with(inflater.getContext()).load(imageFile).fit().centerCrop().into(imageView);
+		Picasso.with(inflater.getContext()).load(imageFile).placeholder(R.drawable.spinner)
+		.fit().centerCrop().into(imageView);
 
 	}
 

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
+import ro.epb.itec.tripmemories.R;
 import ro.epb.itec.tripmemories.persistance.preferences.PrefsHelper;
 import ro.epb.itec.tripmemories.ui.view.TouchImageView;
 import android.content.Context;
@@ -37,7 +38,7 @@ public class LargeImageLoader {
 	}
 
 	private static void loadSD(Context context, File file, TouchImageView view, int size) {
-		Picasso.with(context).load(file).resize(size, size).centerInside().into(view);
+		Picasso.with(context).load(file).placeholder(R.drawable.spinner).resize(size, size).centerInside().into(view);
 	}
 
 	private static void loadHD(final Context context, final File file, final TouchImageView view) {
@@ -46,7 +47,8 @@ public class LargeImageLoader {
 			@Override
 			protected Bitmap doInBackground(Void... params) {
 				final CountDownLatch latch = new CountDownLatch(1);
-				Picasso.with(context).load(file).skipMemoryCache().into(new Target() {
+				Picasso.with(context).load(file).placeholder(R.drawable.spinner)
+				.skipMemoryCache().into(new Target() {
 
 					@Override
 					public void onPrepareLoad(Drawable placeHolderDrawable) {

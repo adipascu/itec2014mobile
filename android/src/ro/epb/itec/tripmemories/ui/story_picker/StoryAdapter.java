@@ -50,7 +50,8 @@ public class StoryAdapter extends CursorAdapter {
 			if(i>2)
 				break;
 			File image = ImageHelper.getImageFile(imageCursor);
-			Picasso.with(context).load(image).fit().centerCrop().into(imageView[i]);
+			Picasso.with(context).load(image).fit().placeholder(R.drawable.spinner)
+			.centerCrop().into(imageView[i]);
 			imageView[i].setVisibility(View.VISIBLE);
 			
 			i++;

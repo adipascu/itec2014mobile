@@ -179,7 +179,8 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 		case LOADER_IMAGE:
 			if(cursor.moveToFirst()){
 				File image = ImageHelper.getImageFile(cursor);
-				Picasso.with(this).load(image).fit().centerInside().into(imageView);
+				Picasso.with(this).load(image).placeholder(R.drawable.spinner)
+				.fit().centerInside().into(imageView);
 			}
 			else
 				finish();
