@@ -46,6 +46,7 @@
         <activity
             android:name="ro.epb.itec.tripmemories.ui.story.StoryActivity"
             android:label="Story"
+            android:parentActivityName="ro.epb.itec.tripmemories.ui.story_picker.StoryPickerActivity"
             android:theme="@style/TransparentTheme"
             android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
@@ -66,6 +67,7 @@
         <activity
             android:name="ro.epb.itec.tripmemories.ui.image.ImageEditActivity"
             android:label="Image Editor"
+            android:parentActivityName="ro.epb.itec.tripmemories.ui.story.StoryActivity"
             android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -84,7 +86,8 @@
         </activity>
         <activity
             android:name="ro.epb.itec.tripmemories.ui.story_edit.StoryEditActivity"
-            android:label="Story Editor" >
+            android:label="Story Editor"
+            android:parentActivityName="ro.epb.itec.tripmemories.ui.story.StoryActivity" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -96,6 +99,7 @@
         <activity
             android:name="ro.epb.itec.tripmemories.ui.settings.SettingsActivity"
             android:label="Settings"
+            android:parentActivityName="ro.epb.itec.tripmemories.ui.story_picker.StoryPickerActivity"
             android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
     </application>

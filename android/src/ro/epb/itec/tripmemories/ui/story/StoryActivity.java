@@ -143,14 +143,15 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 			Intent intent2 = new Intent(Intent.ACTION_EDIT, uri);
 			startActivity(intent2);
 			return true;
+		case android.R.id.home:
+			finish();
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-
 	}
-
-
+	
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {

@@ -58,11 +58,15 @@ public class StoryEditActivity extends FragmentActivity implements LoaderCallbac
 			getContentResolver().delete(uri, null, null);
 			Toast.makeText(this, "Deleting story...", Toast.LENGTH_SHORT).show();
 			return true;
+		case android.R.id.home:
+			finish();
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
