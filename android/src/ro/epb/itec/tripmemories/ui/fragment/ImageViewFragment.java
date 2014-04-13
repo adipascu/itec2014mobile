@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 public class ImageViewFragment extends Fragment{
@@ -33,12 +34,15 @@ public class ImageViewFragment extends Fragment{
 		Bundle args = getArguments();
 		String imagePath = args.getString(ARG_IMAGE_PATH);
 		imageUri = (Uri) args.getParcelable(ARG_IMAGE_URI);
-		LargeImageLoader.load(getActivity(),new File(imagePath), view);		
+		LargeImageLoader.load(getActivity(),new File(imagePath), view);
+		
 		
 		Activity activity = getActivity();		
 		if(activity instanceof TouchImageView.StateChangeListener){
 			view.setOnStateListener((StateChangeListener) activity);
 		}
+		if(activity instanceof OnClickListener)
+			view.setOnClickListener((OnClickListener) activity);
 		
 		setHasOptionsMenu(true);
 		

@@ -6,7 +6,8 @@
         android:id="@+id/edit_text"
         android:layout_width="300dp"
         android:layout_height="wrap_content" 
-        android:hint="Story Name">
+        android:hint="Story Name"
+        android:singleLine="true">
     </EditText>
 
 </RelativeLayout>

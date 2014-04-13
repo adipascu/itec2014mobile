@@ -6,7 +6,6 @@ import ro.epb.itec.tripmemories.persistance.contracts.StoryContract;
 import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
 import ro.epb.itec.tripmemories.persistance.preferences.PrefsHelper;
 import ro.epb.itec.tripmemories.ui.image.ImageEditActivity;
-import ro.epb.itec.tripmemories.ui.story_edit.StoryEditActivity;
 import ro.epb.itec.tripmemories.ui.view.ToggleViewPager;
 import ro.epb.itec.tripmemories.ui.view.TouchImageView;
 import ro.epb.itec.tripmemories.ui.view.TouchImageView.StateChangeListener;
@@ -28,11 +27,12 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-public class StoryActivity extends FragmentActivity implements LoaderCallbacks<Cursor>, OnItemClickListener, StateChangeListener {
+public class StoryActivity extends FragmentActivity implements LoaderCallbacks<Cursor>, OnItemClickListener, StateChangeListener, OnClickListener {
 
 	private static final int LOADER_STORY = 0;
 	private static final int LOADER_IMAGES = 1;
@@ -50,6 +50,8 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 	private Uri uri;
 	private String type;
 	private Uri imageUri;
+	private View rootView;
+	private boolean isFullScreen;
 
 
 
@@ -77,8 +79,8 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 		if(VERSION.SDK_INT >= VERSION_CODES.KITKAT)
 			setImmersive(true);
 
-		//setFullscreen(true);
 
+		rootView = findViewById(R.id.container);
 	}
 
 
@@ -88,7 +90,7 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 		fragmentAdapter = new ImageSlideAdapter(getSupportFragmentManager());
 		viewPager = (ToggleViewPager) findViewById(R.id.view_pager);
 		//todo: change offscreen limit SD vs HD
-		
+
 		SharedPreferences prefs = PrefsHelper.getGlobalPrefs(this);
 		boolean isHd = prefs.getBoolean(PrefsHelper.PREF_HD, false);
 		if(isHd)
@@ -115,12 +117,17 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	private void setFullscreen(boolean b) {
-		final View rootView = findViewById(R.id.container);
-		//rootView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
-		getActionBar().hide();		
-		if(VERSION.SDK_INT >= 16)
-			rootView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+	private void setFullscreen(boolean isFullscreen) {
+		if(isFullscreen){
+			getActionBar().hide();		
+			if(VERSION.SDK_INT >= 16)
+				rootView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+		}
+		else{
+			getActionBar().show();		
+			if(VERSION.SDK_INT >= 16)
+				rootView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+		}
 
 	}
 
@@ -154,7 +161,7 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -270,6 +277,21 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 
 
 	}
+
+
+	/**
+	 * called to toggle fullscreen from deep under 
+	 */
+	
+	
+	@Override
+	public void onClick(View v) {
+		isFullScreen = !isFullScreen;
+		setFullscreen(isFullScreen);
+
+	}
+
+
 
 
 
