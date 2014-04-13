@@ -1,7 +1,6 @@
 package ro.epb.itec.tripmemories.ui.story_edit;
 
 import ro.epb.itec.tripmemories.R;
-import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
 import ro.epb.itec.tripmemories.persistance.contracts.StoryContract;
 import android.content.ContentValues;
 import android.content.Intent;
