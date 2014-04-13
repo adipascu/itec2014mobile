@@ -1,6 +1,7 @@
 package ro.epb.itec.tripmemories.ui.story_edit;
 
 import ro.epb.itec.tripmemories.R;
+import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
 import ro.epb.itec.tripmemories.persistance.contracts.StoryContract;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -11,7 +12,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class StoryEditActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
 
@@ -39,7 +43,7 @@ public class StoryEditActivity extends FragmentActivity implements LoaderCallbac
 		setContentView(R.layout.story_edit_activity);
 		intent = getIntent();
 		uri = intent.getData();
-		
+
 		editText = (EditText) findViewById(R.id.edit_text);
 
 		getSupportLoaderManager().initLoader(LOADER_STORY, null, this);
@@ -47,14 +51,24 @@ public class StoryEditActivity extends FragmentActivity implements LoaderCallbac
 
 	}
 
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.delete:
+			getContentResolver().delete(uri, null, null);
+			Toast.makeText(this, "Deleting story...", Toast.LENGTH_SHORT).show();
+			return true;
 
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
-	//
-	//	@Override
-	//	public boolean onCreateOptionsMenu(Menu menu) {
-	//		getMenuInflater().inflate(R.menu.image_edit, menu);
-	//		return true;
-	//	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.story_edit, menu);
+		return true;
+	}
 
 
 	@Override

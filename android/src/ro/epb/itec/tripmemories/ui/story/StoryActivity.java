@@ -172,6 +172,12 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		switch (loader.getId()) {
 		case LOADER_STORY:
+			if(cursor.moveToFirst())
+			{
+
+			}
+			else
+				finish();
 			break;
 		case LOADER_IMAGES:
 			if(StoryContract.CONTENT_ITEM_TYPE.equals(type)){

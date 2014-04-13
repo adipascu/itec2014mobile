@@ -4,18 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-import com.squareup.picasso.Picasso;
-
 import ro.epb.itec.tripmemories.R;
-import ro.epb.itec.tripmemories.persistance.TripMatcher;
 import ro.epb.itec.tripmemories.persistance.contracts.StoryContract;
 import ro.epb.itec.tripmemories.persistance.helpers.ImageHelper;
 import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
-import ro.epb.itec.tripmemories.ui.story_picker.StoryPickerActivity;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +25,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 public class ImageEditActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
 

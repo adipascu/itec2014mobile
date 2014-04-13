@@ -148,23 +148,39 @@ public class TripProvider extends ContentProvider {
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		int ret = 0;
 		List<String> segments = uri.getPathSegments();
+		String uuidSelection = SyncColumns._UUID + "=?";
+		String[] uuidArgs = new String[]{segments.get(1)};
 		switch (matcher.match(uri)) {
 		case TripMatcher.IMAGE_ITEM:
 
 			String[] projection = new String[]{ImageContract.COLUMN_ID_STORY, ImageContract.COLUMN_SRC};
-			String[] whereArgs = new String[]{segments.get(1)};
+			
+			
 			//get parent id
-			Cursor c = query(uri, projection , ImageContract._UUID+"=?", whereArgs, null);
+			Cursor c = query(uri, projection , uuidSelection , uuidArgs, null);
 			if(!c.moveToFirst()){
 				throw new RuntimeException("missing parent!");
 			}
 			String storyUuid = c.getString(0);
 			Uri parentUri = StoryHelper.buildUri(storyUuid);
-			ret+=db.delete(ImageContract.TABLE_NAME, ImageContract._UUID+"=?", whereArgs );
+			ret+=db.delete(ImageContract.TABLE_NAME, ImageContract._UUID+"=?", uuidArgs );
 			resolver.notifyChange(parentUri, null);
 
 			File imageFile = ImageHelper.getImageFile(c);
 			imageFile.delete();
+			break;
+			
+		case TripMatcher.STORY_ITEM:
+
+			Uri imagesUri = StoryHelper.getImages(uri);
+			String[] uuidProj = new String[]{ImageContract._UUID};
+			Cursor imageCursor = query(imagesUri, uuidProj, null, null, null);
+			while(imageCursor.moveToNext()){
+				Uri img = ImageHelper.buildUri(imageCursor.getString(0));
+				ret+=delete(img, null, null);
+			}			
+			
+			ret+=db.delete(StoryContract.TABLE_NAME, uuidSelection, uuidArgs );
 			break;
 
 		default:
