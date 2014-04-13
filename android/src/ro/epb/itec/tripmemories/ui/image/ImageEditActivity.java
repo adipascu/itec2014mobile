@@ -37,11 +37,13 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 	private static final int TAKE_PHOTO_CODE = 0;
 	private static final int PICK_MOVE_CODE = 1;
 
+	public static final String EXTRA_STORY = "parentStory";
+
 
 	private Intent intent;
 	private Uri uri;		
 
-	
+
 	private File imageFile;
 	private boolean isTakingSnapshot;
 	private LoaderManager loaderManager;
@@ -90,7 +92,13 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 			}
 			else{
 				try {
-					Uri currentStory = StoryHelper.getOrCreateCurrent(getContentResolver());
+					Uri currentStory = null;
+					Bundle extras = intent.getExtras();
+					if(extras!= null && extras.containsKey(EXTRA_STORY))
+						currentStory = (Uri)extras.getParcelable(EXTRA_STORY);
+					if(currentStory == null)
+						currentStory = StoryHelper.getOrCreateCurrent(getContentResolver());
+					
 					ContentValues values;
 					values = ImageHelper.newValues(imageFile.getAbsolutePath());
 					Uri images = StoryHelper.getImages(currentStory);
@@ -141,7 +149,7 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 			shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
 			shareIntent.setType("image/*");
 			shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-			
+
 			startActivity(Intent.createChooser(shareIntent, "Share Image"));
 			return true;
 		case android.R.id.home:

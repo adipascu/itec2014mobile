@@ -5,6 +5,8 @@ import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
 import ro.epb.itec.tripmemories.persistance.contracts.StoryContract;
 import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
 import ro.epb.itec.tripmemories.persistance.preferences.PrefsHelper;
+import ro.epb.itec.tripmemories.ui.image.ImageEditActivity;
+import ro.epb.itec.tripmemories.ui.story_edit.StoryEditActivity;
 import ro.epb.itec.tripmemories.ui.view.ToggleViewPager;
 import ro.epb.itec.tripmemories.ui.view.TouchImageView;
 import ro.epb.itec.tripmemories.ui.view.TouchImageView.StateChangeListener;
@@ -137,6 +139,7 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 		switch (item.getItemId()) {
 		case R.id.add_image:
 			Intent intent = new Intent(Intent.ACTION_INSERT, ImageContract.CONTENT_DIR_URI);
+			intent.putExtra(ImageEditActivity.EXTRA_STORY, uri);
 			startActivity(intent);
 			return true;
 		case R.id.edit_story:

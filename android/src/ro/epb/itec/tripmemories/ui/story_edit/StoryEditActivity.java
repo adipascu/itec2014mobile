@@ -24,18 +24,9 @@ public class StoryEditActivity extends FragmentActivity implements LoaderCallbac
 	private static final int LOADER_STORY = 0;
 
 
-
-
 	private Intent intent;
 	private Uri uri;
-
-
-
-
 	private EditText editText;		
-
-
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -110,8 +101,6 @@ public class StoryEditActivity extends FragmentActivity implements LoaderCallbac
 		}
 
 	}
-
-
 
 
 
