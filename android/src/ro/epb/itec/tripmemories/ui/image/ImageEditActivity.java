@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import ro.epb.itec.tripmemories.R;
+import ro.epb.itec.tripmemories.persistance.contracts.ImageContract;
 import ro.epb.itec.tripmemories.persistance.contracts.StoryContract;
 import ro.epb.itec.tripmemories.persistance.helpers.ImageHelper;
 import ro.epb.itec.tripmemories.persistance.helpers.StoryHelper;
@@ -23,6 +24,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -50,6 +52,8 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 
 	private ImageView imageView;
 
+	private EditText exportName;
+
 
 
 
@@ -74,7 +78,7 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 			setContentView(R.layout.image_edit_activity);
 
 			imageView = (ImageView) findViewById(R.id.image_view);
-
+			exportName = (EditText) findViewById(R.id.export_name);
 			loaderManager = getSupportLoaderManager();
 			loaderManager.initLoader(LOADER_IMAGE, null, this);
 		}
@@ -189,6 +193,9 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 				File image = ImageHelper.getImageFile(cursor);
 				Picasso.with(this).load(image).placeholder(R.drawable.spinner)
 				.fit().centerInside().into(imageView);
+				
+				String exportStr = cursor.getString(cursor.getColumnIndex(ImageContract.COLUMN_DISPLAY_NAME));
+				exportName.setText(exportStr);
 			}
 			else
 				finish();
@@ -203,6 +210,15 @@ public class ImageEditActivity extends FragmentActivity implements LoaderCallbac
 
 
 
+
+
+	@Override
+	protected void onPause() {
+		ContentValues values = new ContentValues(1);
+		values.put(ImageContract.COLUMN_DISPLAY_NAME, exportName.getText().toString());
+		getContentResolver().update(uri, values, null, null);
+		super.onPause();
+	}
 
 
 	@Override
