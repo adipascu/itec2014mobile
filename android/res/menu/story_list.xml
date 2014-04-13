@@ -9,5 +9,8 @@
         android:id="@+id/add_image"
         android:showAsAction="always"
         android:title="add an image"/>
+    <item
+        android:id="@+id/settings"
+        android:title="Settings"/>
 
 </menu>

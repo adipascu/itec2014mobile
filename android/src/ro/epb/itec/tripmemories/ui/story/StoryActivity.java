@@ -20,6 +20,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -174,7 +175,10 @@ public class StoryActivity extends FragmentActivity implements LoaderCallbacks<C
 		case LOADER_STORY:
 			if(cursor.moveToFirst())
 			{
-
+				String name = cursor.getString(cursor.getColumnIndex(StoryContract.COLUMN_DISPLAY_NAME));
+				if(TextUtils.isEmpty(name))
+					name = "Story";
+				getActionBar().setTitle(name);
 			}
 			else
 				finish();
